@@ -6,11 +6,10 @@ import { ConfigModule } from '@nestjs/config';
 import { HttpModule } from '@nestjs/axios';
 
 const databseUrl = `mongodb+srv://jeremy:vW58aKqyqWOyWTAj@ticketz.qnaij.mongodb.net/ticketz?retryWrites=true&w=majority`;
-
 @Module({
   imports: [
+    ConfigModule.forRoot({ isGlobal: true, cache: true }),
     MongooseModule.forRoot(databseUrl),
-    ConfigModule.forRoot(),
     HttpModule,
     AuthModule,
     UserModule,

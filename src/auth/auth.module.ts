@@ -5,18 +5,17 @@ import { PassportModule } from '@nestjs/passport';
 import { LocalStrategy } from './strategys/local.strategy';
 import { AuthController } from './auth.controller';
 import { JwtModule } from '@nestjs/jwt';
-import { jwtConstants } from './constants';
 import { JwtStrategy } from './strategys/jwt.strategy';
-import { ConfigModule } from '@nestjs/config';
+import { jwtConstants } from './constants';
 
+const expireTime: number = 216000; //6houres
 @Module({
   imports: [
     UserModule,
     PassportModule,
-    ConfigModule,
     JwtModule.register({
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '60s' },
+      signOptions: { expiresIn: `${expireTime}s` },
     }),
   ],
   providers: [AuthService, LocalStrategy, JwtStrategy],

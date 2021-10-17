@@ -3,8 +3,8 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User, UserDocument } from '../schemas/user.schema';
 import { UserModel } from '../models/user.model';
-import { MONGO_KEYS } from '../data/mongo-keys';
-import { QueryBuilder } from '../models/querybuilder.model';
+import { MONGO_KEYS } from '../../shared/data/mongo-keys';
+import { QueryBuilder } from '../../shared/models/querybuilder.model';
 import { QueryparamsUser } from '../models/queryparams.model';
 import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
@@ -13,7 +13,7 @@ import { HttpResponse } from 'src/shared/models/http-response.model';
 @Injectable()
 export class UserService {
   mongoKeys = MONGO_KEYS;
-  salt: number = Number(this.configService.get('saltRounds'));
+  salt: number = Number(this.configService.get('SALT_ROUNDS'));
 
   constructor(
     @InjectModel(User.name)
@@ -108,7 +108,7 @@ export class UserService {
               } else {
                 return {
                   statusCode: 400,
-                  message: `Error when comparing passwords`,
+                  message: `Error while comparing passwords`,
                 };
               }
             });
