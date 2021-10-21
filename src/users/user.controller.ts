@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Param,
   Patch,
   Post,
   Query,
@@ -25,6 +26,11 @@ export class UserController {
     @Query('email') email?: string,
   ): Promise<HttpResponse> {
     return await this.userService.getUser({ id, username, email });
+  }
+
+  @Get('verify/:id')
+  async verifyUser(@Param() param: { id: string }): Promise<HttpResponse> {
+    return await this.userService.verifyUser(param);
   }
 
   @Post('')

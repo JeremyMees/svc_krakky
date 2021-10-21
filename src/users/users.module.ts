@@ -1,6 +1,7 @@
 import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import { MailService } from 'src/mail/mail.service';
 import {
   ResetPassword,
   ResetPasswordSchema,
@@ -10,7 +11,7 @@ import { UserService } from './services/user.service';
 import { UserController } from './user.controller';
 
 @Module({
-  providers: [UserService],
+  providers: [UserService, MailService],
   exports: [UserService],
   controllers: [UserController],
   imports: [

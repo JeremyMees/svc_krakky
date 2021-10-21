@@ -16,6 +16,7 @@ import {
 } from '../schemas/reset-password-token.schema';
 import { ResetPasswordTokenModel } from '../models/reset-password-token.model';
 import { ResetPasswordModel } from '../models/reset-password.model';
+import { MailService } from 'src/mail/mail.service';
 
 @Injectable()
 export class UserService {
@@ -28,6 +29,7 @@ export class UserService {
     @InjectModel(ResetPassword.name)
     private reset_password: Model<ResetPasswordDocument>,
     private configService: ConfigService,
+    private mailService: MailService,
   ) {}
 
   async getUser(queryparams: QueryparamsUser): Promise<HttpResponse> {
@@ -73,10 +75,12 @@ export class UserService {
     } else {
       const hash: string = await bcrypt.hash(user.password, this.salt);
       user.password = hash;
+      user.verified = false;
       const newUser = new this.users(user);
       return newUser
         .save()
         .then((user: UserModel) => {
+          this.mailService.welcome(user.username, user.email, user._id);
           return {
             statusCode: 201,
             message: `Created user ${user._id} succesfully`,
@@ -84,6 +88,7 @@ export class UserService {
               username: user.username,
               email: user.email,
               _id: user._id,
+              verified: user.verified,
             },
           };
         })
@@ -119,6 +124,7 @@ export class UserService {
                         username: data.updatedUser.username,
                         email: data.updatedUser.email,
                         _id: data.updatedUser._id,
+                        verified: data.updatedUser.verified,
                       },
                     };
                   })
@@ -172,6 +178,28 @@ export class UserService {
         message: `Error query params weren't provided`,
       };
     }
+  }
+
+  async verifyUser(param: { id: string }): Promise<HttpResponse> {
+    return await this.users
+      .updateOne({ _id: param.id }, { verified: true })
+      .exec()
+      .then(() => {
+        return {
+          statusCode: 200,
+          message: `Verified user ${param.id} succesfully`,
+          data: {
+            _id: param.id,
+            verified: true,
+          },
+        };
+      })
+      .catch(() => {
+        return {
+          statusCode: 400,
+          message: `Error while trying to verify user ${param.id}`,
+        };
+      });
   }
 
   async checkUsernameIsUsed(obj: { username: string }): Promise<HttpResponse> {
