@@ -9,6 +9,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { join } from 'path';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { WorkspaceModule } from './workspace/workspace.module';
 
 const databseUrl = `mongodb+srv://jeremy:vW58aKqyqWOyWTAj@ticketz.qnaij.mongodb.net/ticketz?retryWrites=true&w=majority`;
 @Module({
@@ -42,6 +43,7 @@ const databseUrl = `mongodb+srv://jeremy:vW58aKqyqWOyWTAj@ticketz.qnaij.mongodb.
       }),
       inject: [ConfigService],
     }),
+    WorkspaceModule,
   ],
   controllers: [],
   providers: [MailService],
