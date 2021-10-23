@@ -8,14 +8,17 @@ import { MailService } from './mail/mail.service';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { join } from 'path';
-import { ServeStaticModule } from '@nestjs/serve-static';
 import { WorkspaceModule } from './workspace/workspace.module';
-
-const databseUrl = `mongodb+srv://jeremy:vW58aKqyqWOyWTAj@ticketz.qnaij.mongodb.net/ticketz?retryWrites=true&w=majority`;
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, cache: true }),
-    MongooseModule.forRoot(databseUrl),
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        uri: configService.get<string>('MONGODB_URI'),
+      }),
+      inject: [ConfigService],
+    }),
     HttpModule,
     AuthModule,
     UserModule,
