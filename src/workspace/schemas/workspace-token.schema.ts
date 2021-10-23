@@ -5,10 +5,17 @@ export type WorkspaceTokenDocument = WorkspaceToken & Document;
 
 @Schema()
 export class WorkspaceToken {
-  @Prop({ required: true, unique: true })
-  joinToken: string;
+  @Prop({ required: true })
+  token: string;
+
   @Prop({ required: true })
   expire: string;
+
+  @Prop({ required: true })
+  user_id: string;
+
+  @Prop({ required: true })
+  workspace_id: string;
 }
 
 export const WorkspaceTokenSchema =

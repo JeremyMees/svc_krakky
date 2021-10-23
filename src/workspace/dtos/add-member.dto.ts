@@ -1,10 +1,14 @@
 import { IsDefined, IsEnum, IsString } from 'class-validator';
 import { MemberRole } from '../enums/member.enum';
 
-export class MemberDTO {
+export class AddMemberDTO {
   @IsString()
   @IsDefined()
-  _id: string;
+  user_id: string;
+
+  @IsString()
+  @IsDefined()
+  workspace_id: string;
 
   @IsEnum(MemberRole)
   @IsDefined()

@@ -1,5 +1,6 @@
 import {
   IsBoolean,
+  IsDefined,
   IsEmail,
   IsOptional,
   IsString,
@@ -8,13 +9,16 @@ import {
 
 export class UserDTO {
   @IsEmail()
+  @IsDefined()
   email: string;
 
   @IsString()
+  @IsDefined()
   @Length(6, 20)
   password: string;
 
   @IsString()
+  @IsDefined()
   @Length(4, 12)
   username: string;
 

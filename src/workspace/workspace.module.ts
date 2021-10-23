@@ -1,4 +1,3 @@
-import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { MailService } from 'src/mail/mail.service';
@@ -15,7 +14,6 @@ import { WorkspaceController } from './workspace.controller';
   exports: [WorkspaceService],
   controllers: [WorkspaceController],
   imports: [
-    HttpModule,
     MongooseModule.forFeature([
       { name: Workspace.name, schema: WorkspaceSchema },
       { name: WorkspaceToken.name, schema: WorkspaceTokenSchema },

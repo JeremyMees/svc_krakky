@@ -254,10 +254,10 @@ export class UserService {
           }
           const token = randomBytes(32).toString('hex');
           const hash: string = await bcrypt.hash(token, this.salt);
-          const currentDatePlusTwelveHoures = new Date().getTime() + 43200000;
+          const currentDatePlusTwelveHoures = Date.now() + 43200000;
           const newReset = new this.reset_password({
             user_id: user.data._id,
-            resetPasswordToken: hash,
+            token: hash,
             expire: currentDatePlusTwelveHoures,
           });
           return newReset
@@ -268,7 +268,7 @@ export class UserService {
                 message: `Created reset password succesfully`,
                 data: {
                   user_id: resetObj.user_id,
-                  resetPasswordToken: resetObj.resetPasswordToken,
+                  token: resetObj.token,
                   expire: resetObj.expire,
                 },
               };
@@ -301,7 +301,7 @@ export class UserService {
           const currentDate = new Date();
           if (
             Number(currentDate) < Number(expireDate) &&
-            resetObj.token === response.resetPasswordToken
+            resetObj.token === response.token
           ) {
             const hash: string = await bcrypt.hash(
               resetObj.password,

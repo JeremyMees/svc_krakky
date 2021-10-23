@@ -8,7 +8,7 @@ export class ResetPassword {
   @Prop({ required: true, unique: true })
   user_id: string;
   @Prop({ required: true })
-  resetPasswordToken: string;
+  token: string;
   @Prop({ required: true })
   expire: string;
 }

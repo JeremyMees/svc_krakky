@@ -7,6 +7,8 @@ import {
   Patch,
   Post,
   Query,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { HttpResponse } from 'src/shared/models/http-response.model';
 import { EmailDTO } from './dtos/email.dto';
@@ -34,16 +36,19 @@ export class UserController {
   }
 
   @Post('')
+  @UsePipes(new ValidationPipe())
   async addUser(@Body() user: UserDTO): Promise<HttpResponse> {
     return await this.userService.addUser(user);
   }
 
   @Post('username')
+  @UsePipes(new ValidationPipe())
   async checkUsernameIsUsed(@Body() user: UsernameDTO): Promise<HttpResponse> {
     return await this.userService.checkUsernameIsUsed(user);
   }
 
   @Post('create_token')
+  @UsePipes(new ValidationPipe())
   async createResetPasswordToken(
     @Body() email: EmailDTO,
   ): Promise<HttpResponse> {
@@ -51,6 +56,7 @@ export class UserController {
   }
 
   @Post('password_reset')
+  @UsePipes(new ValidationPipe())
   async resetPassword(
     @Body() resetPassword: ResetPasswordDTO,
   ): Promise<HttpResponse> {
@@ -58,6 +64,7 @@ export class UserController {
   }
 
   @Patch('')
+  @UsePipes(new ValidationPipe())
   async patchUser(
     @Body() data: { user: UserDTO; updatedUser: UserDTO },
   ): Promise<HttpResponse> {
