@@ -8,4 +8,6 @@ export const MONGO_KEYS = {
   createdby: 'created_by',
   board_id: 'board_id',
   list_id: '_id',
+  workspace: 'workspace',
+  workspace_id: 'workspace_id',
 };

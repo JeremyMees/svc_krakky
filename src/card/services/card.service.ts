@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ListModel } from 'src/list/models/list.model';
@@ -16,6 +16,7 @@ export class CardService {
   constructor(
     @InjectModel(Card.name)
     private card: Model<CardDocument>,
+    @Inject(forwardRef(() => ListService))
     private listService: ListService,
   ) {}
 
@@ -52,8 +53,7 @@ export class CardService {
                 data: card,
               };
             })
-            .catch((err) => {
-              console.log(err);
+            .catch(() => {
               return {
                 statusCode: 400,
                 message: 'Error while trying to save card',
@@ -70,6 +70,45 @@ export class CardService {
         return {
           statusCode: 400,
           message: 'Error while fetching list',
+        };
+      });
+  }
+
+  async deleteCard(queryparams: QueryparamsCardModel): Promise<HttpResponse> {
+    const params = await this.queryBuilder(queryparams);
+    if (params) {
+      return await this.card
+        .deleteOne(params)
+        .then(() => {
+          return { statusCode: 200, message: 'Deleted card succesfully' };
+        })
+        .catch(() => {
+          return {
+            statusCode: 400,
+            message: 'Error while trying to delete card',
+          };
+        });
+    } else {
+      return { statusCode: 400, message: 'Error no query params received' };
+    }
+  }
+
+  async deleteMultipleCards(id: {
+    list_id?: string;
+    board_id?: string;
+  }): Promise<HttpResponse> {
+    return this.card
+      .deleteMany(id)
+      .then(() => {
+        return {
+          statusCode: 200,
+          message: 'Deleted list and coherent cards succesfully',
+        };
+      })
+      .catch(() => {
+        return {
+          statusCode: 400,
+          message: 'Error while trying to delete coherent cards',
         };
       });
   }

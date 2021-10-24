@@ -1,17 +1,19 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { DashboardGateway } from '../gateways/dashboard.gateway';
 import { DashboardService } from './services/dashboard.service';
 import { DashboardController } from './dashboard.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Dashboard, DashboardSchema } from './schemas/dashboard.schema';
 import { WorkspaceModule } from 'src/workspace/workspace.module';
+import { ListModule } from 'src/list/list.module';
 
 @Module({
   providers: [DashboardService, DashboardGateway],
   controllers: [DashboardController],
   exports: [DashboardService],
   imports: [
-    WorkspaceModule,
+    forwardRef(() => WorkspaceModule),
+    forwardRef(() => ListModule),
     MongooseModule.forFeature([
       { name: Dashboard.name, schema: DashboardSchema },
     ]),

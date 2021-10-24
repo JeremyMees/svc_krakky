@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -10,7 +11,6 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { HttpResponse } from 'src/shared/models/http-response.model';
-import { AddCardDTO } from '../card/dtos/add-card.dto';
 import { AddDashboardDTO } from './dtos/add-dashboard.dto';
 import { UpdateDashboardDTO } from './dtos/update-dashboard.dto';
 import { QueryparamsDashboardModel } from './models/queryparams-dashboard.model';
@@ -26,12 +26,14 @@ export class DashboardController {
     @Query('board_id') board_id?: string,
     @Query('title') title?: string,
     @Query('createdby') createdby?: string,
+    @Query('workspace') workspace?: string,
   ): Promise<HttpResponse> {
     return await this.dashboardService.getDashboards({
       id,
       board_id,
       title,
       createdby,
+      workspace,
     });
   }
 
@@ -56,5 +58,12 @@ export class DashboardController {
     @Body() dashboard: UpdateDashboardDTO,
   ): Promise<HttpResponse> {
     return await this.dashboardService.updateDashboard(dashboard);
+  }
+
+  @Delete('/:board_id')
+  async deleteList(
+    @Param() param: QueryparamsDashboardModel,
+  ): Promise<HttpResponse> {
+    return await this.dashboardService.deleteDashboard(param.board_id);
   }
 }

@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { ListService } from 'src/list/services/list.service';
 import { MONGO_KEYS } from 'src/shared/data/mongo-keys';
 import { HttpResponse } from 'src/shared/models/http-response.model';
 import { QueryBuilderModel } from 'src/workspace/models/querybuilder.model';
@@ -10,7 +11,6 @@ import { UpdateDashboardDTO } from '../dtos/update-dashboard.dto';
 import { AggregateDashboardModel } from '../models/aggregate-dashboard.model';
 import { DashboardModel } from '../models/dashboard.model';
 import { QueryparamsDashboardModel } from '../models/queryparams-dashboard.model';
-import { Card, CardDocument } from '../../card/schemas/card.schema';
 import { Dashboard, DashboardDocument } from '../schemas/dashboard.schema';
 
 @Injectable()
@@ -19,7 +19,10 @@ export class DashboardService {
   constructor(
     @InjectModel(Dashboard.name)
     private dashboard: Model<DashboardDocument>,
+    @Inject(forwardRef(() => WorkspaceService))
     private workspaceService: WorkspaceService,
+    @Inject(forwardRef(() => ListService))
+    private listService: ListService,
   ) {}
 
   async getDashboards(
@@ -168,6 +171,52 @@ export class DashboardService {
       .catch(() => {
         return { statusCode: 400, message: 'Error while updating dashboard' };
       });
+  }
+
+  async deleteDashboard(id: string): Promise<HttpResponse> {
+    if (id) {
+      return await this.dashboard
+        .deleteOne({ board_id: id })
+        .then(() => {
+          return this.listService.deleteMultipleLists({ board_id: id });
+        })
+        .catch(() => {
+          return {
+            statusCode: 400,
+            message: 'Error while trying to delete dashboard',
+          };
+        });
+    } else {
+      return { statusCode: 400, message: 'Error no query params received' };
+    }
+  }
+
+  async deleteMultipleDashboards(workspace_id: string): Promise<HttpResponse> {
+    return this.getDashboards({ workspace_id }).then(
+      async (response: HttpResponse) => {
+        if (response.statusCode === 200 && response.data.length > 0) {
+          response.data.forEach(async (dashboard: DashboardModel) => {
+            this.dashboard
+              .deleteMany({ workspace: dashboard.workspace })
+              .then(async () => {
+                this.listService.deleteMultipleLists({
+                  board_id: dashboard.board_id,
+                });
+              });
+          });
+          return {
+            statusCode: 200,
+            message:
+              'Deleted workspace and coherent dashboards, lists and cards succesfully',
+          };
+        } else {
+          return {
+            statusCode: 200,
+            message: 'Workspace deleted successfully',
+          };
+        }
+      },
+    );
   }
 
   async generateId(): Promise<string> {

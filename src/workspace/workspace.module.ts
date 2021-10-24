@@ -1,5 +1,6 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import { DashboardModule } from 'src/dashboard/dashboard.module';
 import { MailService } from 'src/mail/mail.service';
 import {
   WorkspaceToken,
@@ -14,6 +15,7 @@ import { WorkspaceController } from './workspace.controller';
   exports: [WorkspaceService],
   controllers: [WorkspaceController],
   imports: [
+    forwardRef(() => DashboardModule),
     MongooseModule.forFeature([
       { name: Workspace.name, schema: WorkspaceSchema },
       { name: WorkspaceToken.name, schema: WorkspaceTokenSchema },

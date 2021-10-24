@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Workspace, WorkspaceDocument } from '../schemas/workspace.schema';
@@ -19,6 +19,7 @@ import { randomBytes } from 'crypto';
 import { CreateJoinWorkspaceTokenDTO } from '../dtos/create-join-workspace-token.dto';
 import { JoinWorkspaceDTO } from '../dtos/join-workspace.dto';
 import { AddMemberDTO } from '../dtos/add-member.dto';
+import { DashboardService } from 'src/dashboard/services/dashboard.service';
 
 @Injectable()
 export class WorkspaceService {
@@ -31,6 +32,8 @@ export class WorkspaceService {
     @InjectModel(WorkspaceToken.name)
     private join_workspace: Model<WorkspaceTokenDocument>,
     private configService: ConfigService,
+    @Inject(forwardRef(() => DashboardService))
+    private dashboardService: DashboardService,
   ) {}
 
   async getWorkspaces(
@@ -111,9 +114,9 @@ export class WorkspaceService {
     const params = await this.queryBuilder(queryparams);
     if (params) {
       return await this.workspace
-        .deleteOne(params)
-        .then(() => {
-          return { statusCode: 200, message: 'Deleted workspace succesfully' };
+        .findOneAndDelete(params)
+        .then(async (workspace: WorkspaceModel) => {
+          return this.dashboardService.deleteMultipleDashboards(workspace._id);
         })
         .catch(() => {
           return {
@@ -165,8 +168,7 @@ export class WorkspaceService {
               data: tokenObj,
             };
           })
-          .catch((err) => {
-            console.log(err);
+          .catch(() => {
             return {
               statusCode: 400,
               message: `Error when adding join workspace token`,

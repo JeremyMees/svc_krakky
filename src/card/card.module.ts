@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Card, CardSchema } from 'src/card/schemas/card.schema';
 import { ListModule } from 'src/list/list.module';
@@ -8,8 +8,9 @@ import { CardService } from './services/card.service';
 @Module({
   providers: [CardService],
   controllers: [CardController],
+  exports: [CardService],
   imports: [
-    ListModule,
+    forwardRef(() => ListModule),
     MongooseModule.forFeature([{ name: Card.name, schema: CardSchema }]),
   ],
 })

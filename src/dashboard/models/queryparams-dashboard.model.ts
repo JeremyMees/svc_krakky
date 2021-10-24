@@ -4,4 +4,6 @@ export interface QueryparamsDashboardModel {
   createdby?: string;
   board_id?: string;
   list_id?: string;
+  workspace?: string;
+  workspace_id?: string;
 }

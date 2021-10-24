@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { CardService } from 'src/card/services/card.service';
 import { DashboardService } from 'src/dashboard/services/dashboard.service';
 import { MONGO_KEYS } from 'src/shared/data/mongo-keys';
 import { HttpResponse } from 'src/shared/models/http-response.model';
@@ -16,7 +17,10 @@ export class ListService {
   constructor(
     @InjectModel(List.name)
     private list: Model<ListDocument>,
+    @Inject(forwardRef(() => DashboardService))
     private dashboardService: DashboardService,
+    @Inject(forwardRef(() => CardService))
+    private cardService: CardService,
   ) {}
 
   async getLists(queryparams: QueryparamsListModel): Promise<Array<ListModel>> {
@@ -79,6 +83,44 @@ export class ListService {
             message: "Error could't find dashboard to add list",
           };
         }
+      });
+  }
+
+  async deleteList(list_id: string): Promise<HttpResponse> {
+    if (list_id) {
+      return await this.list
+        .deleteOne({ list_id })
+        .then(() => {
+          return this.cardService.deleteMultipleCards({ list_id: list_id });
+        })
+        .catch(() => {
+          return {
+            statusCode: 400,
+            message: 'Error while trying to delete list',
+          };
+        });
+    } else {
+      return { statusCode: 400, message: 'Error no query params received' };
+    }
+  }
+
+  async deleteMultipleLists(id: { board_id?: string }): Promise<HttpResponse> {
+    return this.list
+      .deleteMany(id)
+      .then(async () => {
+        return this.cardService.deleteMultipleCards(id).then(() => {
+          return {
+            statusCode: 200,
+            message:
+              'Deleted dashboard and coherent lists and cards succesfully',
+          };
+        });
+      })
+      .catch(() => {
+        return {
+          statusCode: 400,
+          message: 'Error while trying to delete coherent cards',
+        };
       });
   }
 
