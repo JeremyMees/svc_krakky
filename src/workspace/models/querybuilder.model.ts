@@ -5,4 +5,6 @@ export interface QueryBuilderModel {
   username?: string;
   email?: string;
   createdby?: string;
+  board_id?: string;
+  list_id?: string;
 }

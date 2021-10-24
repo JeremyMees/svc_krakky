@@ -9,6 +9,10 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { join } from 'path';
 import { WorkspaceModule } from './workspace/workspace.module';
+import { DashboardModule } from './dashboard/dashboard.module';
+import { DashboardGateway } from './gateways/dashboard.gateway';
+import { ListModule } from './list/list.module';
+import { CardModule } from './card/card.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, cache: true }),
@@ -47,9 +51,11 @@ import { WorkspaceModule } from './workspace/workspace.module';
       inject: [ConfigService],
     }),
     WorkspaceModule,
+    DashboardModule,
+    ListModule,
+    CardModule,
   ],
-  controllers: [],
-  providers: [MailService],
+  providers: [MailService, DashboardGateway],
   exports: [MailService],
 })
 export class AppModule {}
