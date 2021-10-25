@@ -1,6 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AuthModule } from './auth/auth.module';
-import { UserModule } from './users/users.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { HttpModule } from '@nestjs/axios';
@@ -8,14 +6,16 @@ import { MailService } from './mail/mail.service';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { join } from 'path';
-import { WorkspaceModule } from './workspace/workspace.module';
-import { DashboardModule } from './dashboard/dashboard.module';
 import { DashboardGateway } from './gateways/dashboard.gateway';
-import { ListModule } from './list/list.module';
-import { CardModule } from './card/card.module';
+import { ThrottlerModule } from '@nestjs/throttler';
+import { RoutingModule } from './routing.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, cache: true }),
+    ThrottlerModule.forRoot({
+      ttl: 60,
+      limit: 100,
+    }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
@@ -24,8 +24,6 @@ import { CardModule } from './card/card.module';
       inject: [ConfigService],
     }),
     HttpModule,
-    AuthModule,
-    UserModule,
     MailerModule.forRootAsync({
       useFactory: async (config: ConfigService) => ({
         transport: {
@@ -50,10 +48,7 @@ import { CardModule } from './card/card.module';
       }),
       inject: [ConfigService],
     }),
-    WorkspaceModule,
-    DashboardModule,
-    ListModule,
-    CardModule,
+    RoutingModule,
   ],
   providers: [MailService, DashboardGateway],
   exports: [MailService],

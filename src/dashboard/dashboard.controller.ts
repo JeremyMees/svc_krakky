@@ -7,15 +7,14 @@ import {
   Patch,
   Post,
   Query,
-  UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
 import { HttpResponse } from 'src/shared/models/http-response.model';
 import { AddDashboardDTO } from './dtos/add-dashboard.dto';
 import { UpdateDashboardDTO } from './dtos/update-dashboard.dto';
 import { QueryparamsDashboardModel } from './models/queryparams-dashboard.model';
 import { DashboardService } from './services/dashboard.service';
-
+import { ApiTags } from '@nestjs/swagger';
+@ApiTags('Dashboards')
 @Controller('dashboard')
 export class DashboardController {
   constructor(private dashboardService: DashboardService) {}
@@ -45,7 +44,6 @@ export class DashboardController {
   }
 
   @Post('')
-  @UsePipes(new ValidationPipe())
   async addDashboard(
     @Body() dashboard: AddDashboardDTO,
   ): Promise<HttpResponse> {
@@ -53,7 +51,6 @@ export class DashboardController {
   }
 
   @Patch('')
-  @UsePipes(new ValidationPipe())
   async updateDashboard(
     @Body() dashboard: UpdateDashboardDTO,
   ): Promise<HttpResponse> {
