@@ -165,7 +165,7 @@ export class DashboardService {
       .then(() => {
         return {
           statusCode: 200,
-          message: 'Updated workspace succesfully',
+          message: 'Updated dashboard succesfully',
         };
       })
       .catch(() => {

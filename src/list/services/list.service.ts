@@ -7,6 +7,7 @@ import { MONGO_KEYS } from 'src/shared/data/mongo-keys';
 import { HttpResponse } from 'src/shared/models/http-response.model';
 import { QueryBuilderModel } from 'src/workspace/models/querybuilder.model';
 import { AddListDTO } from '../dtos/add-list.dto';
+import { UpdateListDTO } from '../dtos/update-list.dto';
 import { ListModel } from '../models/list.model';
 import { QueryparamsListModel } from '../models/queryparams-list.model';
 import { List, ListDocument } from '../schemas/list.schema';
@@ -83,6 +84,20 @@ export class ListService {
             message: "Error could't find dashboard to add list",
           };
         }
+      });
+  }
+
+  async updateList(list: UpdateListDTO): Promise<HttpResponse> {
+    return this.list
+      .updateOne({ board_id: list.board_id }, list)
+      .then(() => {
+        return {
+          statusCode: 200,
+          message: 'Updated list succesfully',
+        };
+      })
+      .catch(() => {
+        return { statusCode: 400, message: 'Error while updating list' };
       });
   }
 

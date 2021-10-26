@@ -9,7 +9,7 @@ import { QueryBuilderModel } from 'src/workspace/models/querybuilder.model';
 import { CardModel } from '../models/card.model';
 import { QueryparamsCardModel } from '../models/queryparams-card.model';
 import { Card, CardDocument } from '../schemas/card.schema';
-
+import { UpdateCardDTO } from '../dtos/update-card.dto';
 @Injectable()
 export class CardService {
   mongoKeys = MONGO_KEYS;
@@ -71,6 +71,20 @@ export class CardService {
           statusCode: 400,
           message: 'Error while fetching list',
         };
+      });
+  }
+
+  async updateCard(card: UpdateCardDTO): Promise<HttpResponse> {
+    return this.card
+      .updateOne({ board_id: card.board_id }, card)
+      .then(() => {
+        return {
+          statusCode: 200,
+          message: 'Updated card succesfully',
+        };
+      })
+      .catch(() => {
+        return { statusCode: 400, message: 'Error while updating card' };
       });
   }
 

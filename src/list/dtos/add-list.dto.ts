@@ -1,4 +1,4 @@
-import { IsDefined, IsString, Length } from 'class-validator';
+import { IsDefined, IsNumber, IsString, Length } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 export class AddListDTO {
   @ApiProperty({ required: true })

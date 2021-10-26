@@ -7,15 +7,16 @@ import {
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Colors } from '../../shared/enums/color.enum';
-export class AddCardDTO {
+
+export class UpdateCardDTO {
   @ApiProperty({ required: true })
   @IsString()
   @IsDefined()
   board_id: string;
 
-  @ApiProperty({ required: true })
+  @ApiProperty({ required: false })
   @IsString()
-  @IsDefined()
+  @IsOptional()
   @Length(1, 20)
   title: string;
 
@@ -24,20 +25,10 @@ export class AddCardDTO {
   @IsOptional()
   content: string;
 
-  @ApiProperty({ required: true })
+  @ApiProperty({ required: false })
   @IsString()
-  @IsDefined()
+  @IsOptional()
   list_id: string;
-
-  @ApiProperty({ required: true })
-  @IsString()
-  @IsDefined()
-  created_by: string;
-
-  @ApiProperty({ required: true })
-  @IsString()
-  @IsDefined()
-  created_at: string;
 
   @ApiProperty({ required: false, enum: Colors })
   @IsEnum(Colors)
