@@ -36,7 +36,7 @@ import { RoutingModule } from './routing.module';
           },
         },
         defaults: {
-          from: 'No Reply <Cronus>',
+          from: 'No Reply <Krakky>',
         },
         template: {
           dir: join(__dirname, 'mail', 'templates'),

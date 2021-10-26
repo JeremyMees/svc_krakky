@@ -11,7 +11,7 @@ export class MailService {
     //en niet rechtstreeks verbinden met de databse
     this.mailer.sendMail({
       to: email,
-      from: '"<Cronus>"CronusKaban@gmail.com',
+      from: '"<Krakky>"CronusKaban@gmail.com',
       subject: 'Welcome',
       template: './user/welcome',
       context: {
@@ -25,7 +25,7 @@ export class MailService {
   goodbye(username: string, email: string, id: string): void {
     this.mailer.sendMail({
       to: email,
-      from: '"<Cronus>"CronusKaban@gmail.com',
+      from: '"<Krakky>"CronusKaban@gmail.com',
       subject: 'Goodbye',
       template: './user/goodbye',
       context: {
@@ -43,7 +43,7 @@ export class MailService {
   ): void {
     this.mailer.sendMail({
       to: email,
-      from: '"<Cronus>"CronusKaban@gmail.com',
+      from: '"<Krakky>"CronusKaban@gmail.com',
       subject: "You've been added to a workspace",
       template: './workspace/added-member',
       context: {
@@ -57,7 +57,7 @@ export class MailService {
   addNonMemberToWorkspace(workspace: string, email: string, id: string): void {
     this.mailer.sendMail({
       to: email,
-      from: '"<Cronus>"CronusKaban@gmail.com',
+      from: '"<Krakky>"CronusKaban@gmail.com',
       subject: "You've been added to a workspace",
       template: './workspace/added-non-member',
       context: {
