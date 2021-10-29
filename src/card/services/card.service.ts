@@ -75,8 +75,11 @@ export class CardService {
   }
 
   async updateCard(card: UpdateCardDTO): Promise<HttpResponse> {
+    const id: string = card.card_id;
+    delete card.board_id;
+    delete card.card_id;
     return this.card
-      .updateOne({ board_id: card.board_id }, card)
+      .updateOne({ _id: id }, card)
       .then(() => {
         return {
           statusCode: 200,

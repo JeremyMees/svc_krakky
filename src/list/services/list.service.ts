@@ -88,8 +88,11 @@ export class ListService {
   }
 
   async updateList(list: UpdateListDTO): Promise<HttpResponse> {
+    const id: string = list.list_id;
+    delete list.list_id;
+    delete list.board_id;
     return this.list
-      .updateOne({ board_id: list.board_id }, list)
+      .updateOne({ _id: id }, list)
       .then(() => {
         return {
           statusCode: 200,

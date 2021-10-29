@@ -11,6 +11,11 @@ export class UpdateListDTO {
   @ApiProperty({ required: true })
   @IsString()
   @IsDefined()
+  list_id: string;
+
+  @ApiProperty({ required: true })
+  @IsString()
+  @IsDefined()
   board_id: string;
 
   @ApiProperty({ required: false })

@@ -14,6 +14,11 @@ export class UpdateCardDTO {
   @IsDefined()
   board_id: string;
 
+  @ApiProperty({ required: true })
+  @IsString()
+  @IsDefined()
+  card_id: string;
+
   @ApiProperty({ required: false })
   @IsString()
   @IsOptional()

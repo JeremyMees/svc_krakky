@@ -1,6 +1,7 @@
-import { IsDefined, IsString, Length } from 'class-validator';
+import { IsDefined, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-export class AddListDTO {
+
+export class DeleteListDTO {
   @ApiProperty({ required: true })
   @IsString()
   @IsDefined()
@@ -9,6 +10,5 @@ export class AddListDTO {
   @ApiProperty({ required: true })
   @IsString()
   @IsDefined()
-  @Length(1, 20)
-  title: string;
+  list_id: string;
 }

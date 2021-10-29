@@ -160,8 +160,10 @@ export class DashboardService {
   }
 
   async updateDashboard(dashboard: UpdateDashboardDTO): Promise<HttpResponse> {
+    const id: string = dashboard.board_id;
+    delete dashboard.board_id;
     return this.dashboard
-      .updateOne({ board_id: dashboard.board_id }, dashboard)
+      .updateOne({ board_id: id }, dashboard)
       .then(() => {
         return {
           statusCode: 200,

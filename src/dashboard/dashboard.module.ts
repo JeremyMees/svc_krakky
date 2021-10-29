@@ -1,5 +1,4 @@
 import { forwardRef, Module } from '@nestjs/common';
-import { DashboardGateway } from '../gateways/dashboard.gateway';
 import { DashboardService } from './services/dashboard.service';
 import { DashboardController } from './dashboard.controller';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -8,7 +7,7 @@ import { WorkspaceModule } from 'src/workspace/workspace.module';
 import { ListModule } from 'src/list/list.module';
 
 @Module({
-  providers: [DashboardService, DashboardGateway],
+  providers: [DashboardService],
   controllers: [DashboardController],
   exports: [DashboardService],
   imports: [

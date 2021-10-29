@@ -6,9 +6,9 @@ import { MailService } from './mail/mail.service';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { join } from 'path';
-import { DashboardGateway } from './gateways/dashboard.gateway';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { RoutingModule } from './routing.module';
+import { GatewaysModule } from './gateways/gateways.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, cache: true }),
@@ -49,8 +49,9 @@ import { RoutingModule } from './routing.module';
       inject: [ConfigService],
     }),
     RoutingModule,
+    GatewaysModule,
   ],
-  providers: [MailService, DashboardGateway],
+  providers: [MailService],
   exports: [MailService],
 })
 export class AppModule {}
