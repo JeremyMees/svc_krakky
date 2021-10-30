@@ -15,11 +15,13 @@ import { UserDTO } from './dtos/user.dto';
 import { UsernameDTO } from './dtos/username.dto';
 import { UserService } from './services/user.service';
 import { ApiTags } from '@nestjs/swagger';
+import { Public } from 'src/shared/decorator/skip-auth.decorator';
 @ApiTags('Users')
 @Controller('users')
 export class UserController {
   constructor(private userService: UserService) {}
 
+  @Public()
   @Get('')
   async getUser(
     @Query('id') id?: string,
@@ -29,21 +31,25 @@ export class UserController {
     return await this.userService.getUser({ id, username, email });
   }
 
+  @Public()
   @Get('verify/:id')
   async verifyUser(@Param() param: { id: string }): Promise<HttpResponse> {
     return await this.userService.verifyUser(param);
   }
 
+  @Public()
   @Post('')
   async addUser(@Body() user: UserDTO): Promise<HttpResponse> {
     return await this.userService.addUser(user);
   }
 
+  @Public()
   @Post('username')
   async checkUsernameIsUsed(@Body() user: UsernameDTO): Promise<HttpResponse> {
     return await this.userService.checkUsernameIsUsed(user);
   }
 
+  @Public()
   @Post('create_token')
   async createResetPasswordToken(
     @Body() email: EmailDTO,
@@ -51,6 +57,7 @@ export class UserController {
     return await this.userService.createResetPasswordToken(email);
   }
 
+  @Public()
   @Post('password_reset')
   async resetPassword(
     @Body() resetPassword: ResetPasswordDTO,
@@ -65,6 +72,7 @@ export class UserController {
     return await this.userService.patchUser(data);
   }
 
+  @Public()
   @Delete('')
   async deleteUser(
     @Query('id') id?: string,

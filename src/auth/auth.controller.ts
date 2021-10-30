@@ -5,17 +5,20 @@ import { LocalAuthGuard } from './guards/auth.guard';
 import { JwtAuthGuard } from './guards/jwt.guard';
 import { AuthService } from './services/auth.service';
 import { ApiTags } from '@nestjs/swagger';
+import { Public } from 'src/shared/decorator/skip-auth.decorator';
 @ApiTags('Authentication')
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
+  @Public()
   @UseGuards(LocalAuthGuard)
   @Post('login')
   async login(@Body() user: CredentialsDTO) {
     return this.authService.login(user);
   }
 
+  @Public()
   @UseGuards(JwtAuthGuard)
   @Post('validate')
   async validateUser(

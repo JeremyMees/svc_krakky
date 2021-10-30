@@ -9,6 +9,8 @@ import { join } from 'path';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { RoutingModule } from './routing.module';
 import { GatewaysModule } from './gateways/gateways.module';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './auth/guards/jwt.guard';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, cache: true }),
@@ -51,7 +53,13 @@ import { GatewaysModule } from './gateways/gateways.module';
     RoutingModule,
     GatewaysModule,
   ],
-  providers: [MailService],
+  providers: [
+    MailService,
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+  ],
   exports: [MailService],
 })
 export class AppModule {}

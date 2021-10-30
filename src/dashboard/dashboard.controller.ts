@@ -20,7 +20,7 @@ export class DashboardController {
   constructor(private dashboardService: DashboardService) {}
 
   @Get('')
-  async getDashboars(
+  async getDashboards(
     @Query('id') id?: string,
     @Query('board_id') board_id?: string,
     @Query('title') title?: string,

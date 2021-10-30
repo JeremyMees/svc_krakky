@@ -16,6 +16,7 @@ import { WorkspaceDTO } from './dtos/workspace.dto';
 import { QueryparamsWorkspaceModel } from './models/queryparams.model';
 import { WorkspaceService } from './services/workspace.service';
 import { ApiTags } from '@nestjs/swagger';
+import { Public } from 'src/shared/decorator/skip-auth.decorator';
 @ApiTags('Workspaces')
 @Controller('workspace')
 export class WorkspaceController {
@@ -53,6 +54,7 @@ export class WorkspaceController {
     return await this.workspaceService.createJoinWorkspaceToken(obj);
   }
 
+  @Public()
   @Post('join_workspace')
   async joinWorkspace(@Body() obj: JoinWorkspaceDTO): Promise<HttpResponse> {
     return await this.workspaceService.joinWorkspace(obj);
