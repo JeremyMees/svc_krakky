@@ -20,6 +20,8 @@ import { CreateJoinWorkspaceTokenDTO } from '../dtos/create-join-workspace-token
 import { JoinWorkspaceDTO } from '../dtos/join-workspace.dto';
 import { AddMemberDTO } from '../dtos/add-member.dto';
 import { DashboardService } from 'src/dashboard/services/dashboard.service';
+import { UpdateMemberDTO } from '../dtos/update-member.dto';
+import { UserService } from 'src/users/services/user.service';
 
 @Injectable()
 export class WorkspaceService {
@@ -34,6 +36,8 @@ export class WorkspaceService {
     private configService: ConfigService,
     @Inject(forwardRef(() => DashboardService))
     private dashboardService: DashboardService,
+    @Inject(forwardRef(() => UserService))
+    private userService: UserService,
   ) {}
 
   async getWorkspaces(
@@ -61,8 +65,61 @@ export class WorkspaceService {
     }
   }
 
-  async addWorkspace(workspace: WorkspaceDTO): Promise<HttpResponse> {
+  async getAggregatedWorkspaces(
+    queryparams: QueryparamsWorkspaceModel,
+  ): Promise<HttpResponse> {
+    const params = await this.queryBuilder(queryparams);
+    if (params) {
+      return this.workspace
+        .find(params)
+        .then(async (workspaces: Array<WorkspaceModel>) => {
+          const aggregatedWorkspaces = [];
+          await this.asyncForEach(
+            workspaces,
+            async (workspace: WorkspaceModel) => {
+              const aggregatedWorkspace = await this.workspace
+                .aggregate([
+                  { $match: { _id: workspace._id } },
+                  {
+                    $lookup: {
+                      from: 'dashboards',
+                      localField: 'workspace_id',
+                      foreignField: 'workspace_id',
+                      as: 'dashboards',
+                    },
+                  },
+                ])
+                .exec();
+              aggregatedWorkspaces.push(aggregatedWorkspace[0]);
+            },
+          );
+          return {
+            statusCode: 200,
+            message: 'Workspaces fetched successfully',
+            data: aggregatedWorkspaces,
+          };
+        })
+        .catch(() => {
+          return {
+            statusCode: 400,
+            message: 'Error while fetching workspaces',
+          };
+        });
+    } else {
+      return { statusCode: 400, message: 'Error no query params received' };
+    }
+  }
+
+  async asyncForEach(array: Array<any>, callback: any) {
+    for (let index = 0; index < array.length; index++) {
+      await callback(array[index], index, array);
+    }
+  }
+
+  async addWorkspace(payload: WorkspaceDTO): Promise<HttpResponse> {
+    let workspace: WorkspaceModel = payload;
     workspace.team = [{ _id: workspace.created_by, role: 'Owner' }];
+    workspace.workspace_id = await this.generateId();
     const newWorkspace = new this.workspace(workspace);
     return newWorkspace
       .save()
@@ -133,12 +190,12 @@ export class WorkspaceService {
     obj: CreateJoinWorkspaceTokenDTO,
   ): Promise<HttpResponse> {
     return this.join_workspace
-      .findOne({ workspace_id: obj.workspace_id, user_id: obj.user_id })
+      .findOne({ workspace_id: obj.workspace_id, email: obj.email })
       .exec()
       .then(async (response) => {
         if (response) {
           this.join_workspace
-            .deleteOne({ workspace_id: obj.workspace_id, user_id: obj.user_id })
+            .deleteOne({ workspace_id: obj.workspace_id, email: obj.email })
             .exec()
             .then((res) => {
               if (res.deletedCount === 0) {
@@ -152,8 +209,10 @@ export class WorkspaceService {
         const token = randomBytes(32).toString('hex');
         const hash: string = await bcrypt.hash(token, this.salt);
         const currentDatePlusThreeDays = Date.now() + 259200000;
+        const newUser = await this.userService.getUser({ email: obj.email });
         const tokenObj: WorkspaceTokenModel = {
-          user_id: obj.user_id,
+          user_id: newUser.data ? newUser.data._id : undefined,
+          email: obj.email,
           workspace_id: obj.workspace_id,
           token: hash,
           expire: currentDatePlusThreeDays,
@@ -185,7 +244,7 @@ export class WorkspaceService {
 
   async joinWorkspace(joinObj: JoinWorkspaceDTO): Promise<HttpResponse> {
     return this.join_workspace
-      .findOne({ user_id: joinObj.user_id, workspace_id: joinObj.workspace_id })
+      .findOne({ email: joinObj.email, workspace_id: joinObj.workspace_id })
       .exec()
       .then(async (response) => {
         if (response) {
@@ -201,7 +260,7 @@ export class WorkspaceService {
               ) {
                 return this.addTeamMember({
                   workspace_id: joinObj.workspace_id,
-                  user_id: joinObj.user_id,
+                  user_id: response.user_id,
                   role: 'Member',
                 });
               } else {
@@ -234,8 +293,7 @@ export class WorkspaceService {
 
   async addTeamMember(addMember: AddMemberDTO): Promise<HttpResponse> {
     return await this.getWorkspaces({
-      member: addMember.user_id,
-      id: addMember.workspace_id,
+      workspace_id: addMember.workspace_id,
     })
       .then((workspace: HttpResponse) => {
         if (workspace.statusCode === 200) {
@@ -243,10 +301,13 @@ export class WorkspaceService {
             _id: addMember.user_id,
             role: addMember.role,
           };
-          if (workspace.data[0].team.indexOf(member) > -1) {
+          if (workspace.data[0].team.indexOf(member) === -1) {
             workspace.data[0].team.push(member);
             return this.workspace
-              .updateOne({ _id: addMember.workspace_id }, workspace.data[0])
+              .updateOne(
+                { workspace_id: addMember.workspace_id },
+                workspace.data[0],
+              )
               .then(() => {
                 return {
                   statusCode: 200,
@@ -277,6 +338,31 @@ export class WorkspaceService {
         return {
           statusCode: 400,
           message: `Error while fetching workspace`,
+        };
+      });
+  }
+
+  async updateTeamMember(members: UpdateMemberDTO): Promise<HttpResponse> {
+    return await this.workspace
+      .updateOne({ workspace_id: members.workspace_id }, { team: members.team })
+      .then((res) => {
+        if (res.modifiedCount > 0) {
+          return {
+            statusCode: 200,
+            message: 'Workspace updated succesfully',
+            data: members.team,
+          };
+        } else {
+          return {
+            statusCode: 400,
+            message: "Error couldn't find workspace",
+          };
+        }
+      })
+      .catch(() => {
+        return {
+          statusCode: 400,
+          message: 'Error while updating workspace',
         };
       });
   }
@@ -331,6 +417,14 @@ export class WorkspaceService {
           message: `Error while fetching workspace`,
         };
       });
+  }
+
+  async generateId(): Promise<string> {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+      var r = (Math.random() * 16) | 0,
+        v = c == 'x' ? r : (r & 0x3) | 0x8;
+      return v.toString(16);
+    });
   }
 
   async queryBuilder(obj: QueryBuilderModel) {

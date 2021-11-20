@@ -4,5 +4,5 @@ export interface DashboardModel {
   created_by: string;
   title: string;
   board_id: string;
-  workspace: string;
+  workspace_id: string;
 }

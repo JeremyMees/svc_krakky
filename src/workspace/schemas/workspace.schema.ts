@@ -11,6 +11,8 @@ export class Workspace {
   @Prop({ required: true })
   workspace: string;
   @Prop({ required: true })
+  workspace_id: string;
+  @Prop({ required: true })
   team: Array<Member>;
 }
 

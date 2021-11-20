@@ -17,24 +17,54 @@ import { QueryparamsWorkspaceModel } from './models/queryparams.model';
 import { WorkspaceService } from './services/workspace.service';
 import { ApiTags } from '@nestjs/swagger';
 import { Public } from 'src/shared/decorator/skip-auth.decorator';
+import { UserService } from 'src/users/services/user.service';
+import { MemberDTO } from './dtos/member.dto';
+import { UpdateMemberDTO } from './dtos/update-member.dto';
 @ApiTags('Workspaces')
 @Controller('workspace')
 export class WorkspaceController {
-  constructor(private workspaceService: WorkspaceService) {}
+  constructor(
+    private workspaceService: WorkspaceService,
+    private userService: UserService,
+  ) {}
 
   @Get('')
   async getWorkspaces(
     @Query('id') id?: string,
+    @Query('workspace_id') workspace_id?: string,
     @Query('member') member?: string,
     @Query('name') name?: string,
     @Query('createdby') createdby?: string,
   ): Promise<HttpResponse> {
     return await this.workspaceService.getWorkspaces({
       id,
+      workspace_id,
       member,
       name,
       createdby,
     });
+  }
+
+  @Get('aggregated')
+  async getAggregatedWorkspaces(
+    @Query('id') id?: string,
+    @Query('workspace_id') workspace_id?: string,
+    @Query('member') member?: string,
+    @Query('name') name?: string,
+    @Query('createdby') createdby?: string,
+  ): Promise<HttpResponse> {
+    return await this.workspaceService.getAggregatedWorkspaces({
+      id,
+      workspace_id,
+      member,
+      name,
+      createdby,
+    });
+  }
+
+  @Post('members')
+  async getMembers(@Body() members: Array<MemberDTO>): Promise<HttpResponse> {
+    return await this.userService.getMembers(members);
   }
 
   @Post('')
@@ -67,11 +97,18 @@ export class WorkspaceController {
     return await this.workspaceService.updateWorkspace(workspace);
   }
 
-  @Delete('/:id')
-  async deleteWorkspace(
-    @Param() id: QueryparamsWorkspaceModel,
+  @Patch('member')
+  async updateTeamMember(
+    @Body() members: UpdateMemberDTO,
   ): Promise<HttpResponse> {
-    return await this.workspaceService.deleteWorkspace(id);
+    return await this.workspaceService.updateTeamMember(members);
+  }
+
+  @Delete('/:workspace_id')
+  async deleteWorkspace(
+    @Param() workspace_id: QueryparamsWorkspaceModel,
+  ): Promise<HttpResponse> {
+    return await this.workspaceService.deleteWorkspace(workspace_id);
   }
 
   @Delete('member/:workspace_id/:user_id')

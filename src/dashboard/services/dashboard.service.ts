@@ -109,8 +109,7 @@ export class DashboardService {
         if (response.data.length === 0) {
           return this.workspaceService
             .getWorkspaces({
-              name: dashboard.workspace,
-              id: dashboard.workspace_id,
+              workspace_id: dashboard.workspace_id,
             })
             .then((workspace: HttpResponse) => {
               if (workspace.data.length > 0) {
@@ -199,7 +198,7 @@ export class DashboardService {
         if (response.statusCode === 200 && response.data.length > 0) {
           response.data.forEach(async (dashboard: DashboardModel) => {
             this.dashboard
-              .deleteMany({ workspace: dashboard.workspace })
+              .deleteMany({ workspace: dashboard.workspace_id })
               .then(async () => {
                 this.listService.deleteMultipleLists({
                   board_id: dashboard.board_id,

@@ -1,4 +1,4 @@
-import { IsDefined, IsString } from 'class-validator';
+import { IsDefined, IsEmail, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 export class CreateJoinWorkspaceTokenDTO {
   @ApiProperty({ required: true })
@@ -7,7 +7,7 @@ export class CreateJoinWorkspaceTokenDTO {
   workspace_id: string;
 
   @ApiProperty({ required: true })
-  @IsString()
+  @IsEmail()
   @IsDefined()
-  user_id: string;
+  email: string;
 }

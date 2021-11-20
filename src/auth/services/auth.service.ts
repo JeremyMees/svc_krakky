@@ -72,10 +72,16 @@ export class AuthService {
             .compare(password, response.data.password)
             .then((res: boolean) => {
               if (res) {
+                const data = JSON.parse(JSON.stringify(response.data));
+                const nowPlusEightHoures: number = (Date.now() +
+                  60 * 60 * 8 * 1000) as number;
+                delete data.password;
+                data.token_expire_time = nowPlusEightHoures;
+                data.acces_token = this.jwtService.sign(credentials);
                 return {
                   statusCode: 200,
                   message: `User logged in successfully`,
-                  accessToken: this.jwtService.sign(credentials),
+                  data: data,
                 };
               } else {
                 return {

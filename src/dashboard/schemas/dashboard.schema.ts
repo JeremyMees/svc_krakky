@@ -15,7 +15,7 @@ export class Dashboard {
   board_id: string;
 
   @Prop({ required: true })
-  workspace: string;
+  workspace_id: string;
 }
 
 export const DashboardSchema = SchemaFactory.createForClass(Dashboard);

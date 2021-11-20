@@ -15,11 +15,6 @@ export class AddDashboardDTO {
   @ApiProperty({ required: true })
   @IsString()
   @IsDefined()
-  workspace: string;
-
-  @ApiProperty({ required: true })
-  @IsString()
-  @IsDefined()
   workspace_id: string;
 
   @ApiProperty({ required: true })

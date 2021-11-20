@@ -17,6 +17,7 @@ import {
 import { ResetPasswordTokenModel } from '../models/reset-password-token.model';
 import { ResetPasswordModel } from '../models/reset-password.model';
 import { MailService } from 'src/mail/mail.service';
+import { MemberModel } from 'src/workspace/models/member.model';
 
 @Injectable()
 export class UserService {
@@ -70,8 +71,13 @@ export class UserService {
     const usernameUsed = await this.checkUsernameIsUsed({
       username: user.username,
     });
+    const emailUsed = await this.checkEmailIsUsed({
+      email: user.email,
+    });
     if (usernameUsed.data) {
       return usernameUsed;
+    } else if (emailUsed.data) {
+      return emailUsed;
     } else {
       const hash: string = await bcrypt.hash(user.password, this.salt);
       user.password = hash;
@@ -80,7 +86,7 @@ export class UserService {
       return newUser
         .save()
         .then((user: UserModel) => {
-          this.mailService.welcome(user.username, user.email, user._id);
+          // this.mailService.welcome(user.username, user.email, user._id);
           return {
             statusCode: 201,
             message: `Created user ${user._id} succesfully`,
@@ -230,6 +236,34 @@ export class UserService {
       });
   }
 
+  async checkEmailIsUsed(obj: { email: string }): Promise<HttpResponse> {
+    return this.users
+      .findOne({ email: obj.email })
+      .exec()
+      .then((user: UserModel) => {
+        if (user) {
+          return {
+            statusCode: 400,
+            message: `Error email is alreasy in use`,
+            data: true,
+          };
+        } else {
+          return {
+            statusCode: 200,
+            message: `Email is unique`,
+            data: false,
+          };
+        }
+      })
+      .catch(() => {
+        return {
+          statusCode: 400,
+          message: `Error while fetching users`,
+          data: true,
+        };
+      });
+  }
+
   async createResetPasswordToken(obj: {
     email: string;
   }): Promise<HttpResponse> {
@@ -352,6 +386,34 @@ export class UserService {
           message: `Error while fetching reset token`,
         };
       });
+  }
+
+  async getMembers(body: Array<MemberModel>): Promise<HttpResponse> {
+    let teamMembers: Array<any> = [];
+    await this.asyncForEach(body, async (member: MemberModel) => {
+      await this.getUser({ id: member._id }).then((res: HttpResponse) => {
+        if (res.statusCode === 200) {
+          teamMembers.push({
+            _id: res.data._id,
+            username: res.data.username,
+            email: res.data.email,
+          });
+        } else {
+          return res;
+        }
+      });
+    });
+    return {
+      statusCode: 200,
+      message: `Members fetched succesfullly`,
+      data: teamMembers,
+    };
+  }
+
+  async asyncForEach(array: any, callback: any) {
+    for (let index = 0; index < array.length; index++) {
+      await callback(array[index], index, array);
+    }
   }
 
   async queryBuilder(obj: QueryBuilder) {
