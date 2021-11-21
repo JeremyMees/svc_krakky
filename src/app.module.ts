@@ -11,6 +11,7 @@ import { RoutingModule } from './routing.module';
 import { GatewaysModule } from './gateways/gateways.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guards/jwt.guard';
+import { ApiModule } from './api/api.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, cache: true }),
@@ -52,6 +53,7 @@ import { JwtAuthGuard } from './auth/guards/jwt.guard';
     }),
     RoutingModule,
     GatewaysModule,
+    ApiModule,
   ],
   providers: [
     MailService,
