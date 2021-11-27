@@ -26,6 +26,16 @@ export class UserDTO {
   @Length(4, 12)
   username: string;
 
+  @ApiProperty({ required: true })
+  @IsString()
+  @IsDefined()
+  img: string;
+
+  @ApiProperty({ required: true })
+  @IsString()
+  @IsOptional()
+  img_query: string;
+
   @ApiProperty({ required: false })
   @IsOptional()
   @IsBoolean()

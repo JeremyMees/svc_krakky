@@ -16,6 +16,7 @@ import { UsernameDTO } from './dtos/username.dto';
 import { UserService } from './services/user.service';
 import { ApiTags } from '@nestjs/swagger';
 import { Public } from 'src/shared/decorator/skip-auth.decorator';
+import { UpdateUserImgDTO } from './dtos/update-user-img.dto';
 @ApiTags('Users')
 @Controller('users')
 export class UserController {
@@ -70,6 +71,11 @@ export class UserController {
     @Body() data: { user: UserDTO; updatedUser: UserDTO },
   ): Promise<HttpResponse> {
     return await this.userService.patchUser(data);
+  }
+
+  @Patch('/img')
+  async patchUserImage(@Body() data: UpdateUserImgDTO): Promise<HttpResponse> {
+    return await this.userService.patchUserImage(data);
   }
 
   @Public()

@@ -18,6 +18,7 @@ import { ResetPasswordTokenModel } from '../models/reset-password-token.model';
 import { ResetPasswordModel } from '../models/reset-password.model';
 import { MailService } from 'src/mail/mail.service';
 import { MemberModel } from 'src/workspace/models/member.model';
+import { UpdateUserImgDTO } from '../dtos/update-user-img.dto';
 
 @Injectable()
 export class UserService {
@@ -95,6 +96,8 @@ export class UserService {
               email: user.email,
               _id: user._id,
               verified: user.verified,
+              img: user.img,
+              img_query: user.img_query,
             },
           };
         })
@@ -153,6 +156,32 @@ export class UserService {
       })
       .catch(() => {
         return { statusCode: 400, message: `Error while trying to query user` };
+      });
+  }
+
+  async patchUserImage(user: UpdateUserImgDTO): Promise<HttpResponse> {
+    return await this.users
+      .updateOne(
+        { _id: user._id },
+        { img: user.img, img_query: user.img_query },
+      )
+      .exec()
+      .then(() => {
+        return {
+          statusCode: 200,
+          message: `Updated user ${user._id} succesfully`,
+          data: {
+            _id: user._id,
+            img: user.img,
+            img_query: user.img_query,
+          },
+        };
+      })
+      .catch(() => {
+        return {
+          statusCode: 400,
+          message: `Error while trying to update user ${user._id}`,
+        };
       });
   }
 
