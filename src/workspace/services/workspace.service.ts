@@ -22,6 +22,7 @@ import { AddMemberDTO } from '../dtos/add-member.dto';
 import { DashboardService } from 'src/dashboard/services/dashboard.service';
 import { UpdateMemberDTO } from '../dtos/update-member.dto';
 import { UserService } from 'src/users/services/user.service';
+import { IfMemberDTO } from '../dtos/if-member.dto';
 
 @Injectable()
 export class WorkspaceService {
@@ -408,6 +409,34 @@ export class WorkspaceService {
           return {
             statusCode: 400,
             message: `Error couldn't find workspace`,
+          };
+        }
+      })
+      .catch(() => {
+        return {
+          statusCode: 400,
+          message: `Error while fetching workspace`,
+        };
+      });
+  }
+
+  async checkIfMember(user: IfMemberDTO): Promise<HttpResponse> {
+    return this.getWorkspaces({
+      workspace_id: user.workspace_id,
+      member: user.user_id,
+    })
+      .then((res: HttpResponse) => {
+        if (res.data.length > 0) {
+          return {
+            statusCode: 200,
+            message: `Member is part of the workspace`,
+            data: true,
+          };
+        } else {
+          return {
+            statusCode: 200,
+            message: `Member is not part of the workspace`,
+            data: false,
           };
         }
       })

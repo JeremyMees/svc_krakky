@@ -20,6 +20,7 @@ import { Public } from 'src/shared/decorator/skip-auth.decorator';
 import { UserService } from 'src/users/services/user.service';
 import { MemberDTO } from './dtos/member.dto';
 import { UpdateMemberDTO } from './dtos/update-member.dto';
+import { IfMemberDTO } from './dtos/if-member.dto';
 @ApiTags('Workspaces')
 @Controller('workspace')
 export class WorkspaceController {
@@ -75,6 +76,11 @@ export class WorkspaceController {
   @Post('member')
   async addTeamMember(@Body() addMember: AddMemberDTO): Promise<HttpResponse> {
     return await this.workspaceService.addTeamMember(addMember);
+  }
+
+  @Post('is_member')
+  async checkIfMember(@Body() member: IfMemberDTO): Promise<HttpResponse> {
+    return await this.workspaceService.checkIfMember(member);
   }
 
   @Post('create_token')
