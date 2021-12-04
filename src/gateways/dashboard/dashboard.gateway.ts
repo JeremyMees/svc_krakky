@@ -11,7 +11,12 @@ import { DashboardService } from 'src/dashboard/services/dashboard.service';
 import { HttpResponse } from 'src/shared/models/http-response.model';
 import { GetOrDeleteDashboardDTO } from '../../dashboard/dtos/get.dashboard.dto';
 
-@WebSocketGateway(80, { namespace: 'dashboard' })
+@WebSocketGateway(80, {
+  namespace: 'dashboard',
+  cors: {
+    origin: '*',
+  },
+})
 export class DashboardGateway {
   @WebSocketServer()
   server: Server;
