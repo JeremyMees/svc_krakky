@@ -6,4 +6,7 @@ export interface QueryparamsDashboardModel {
   list_id?: string;
   workspace?: string;
   workspace_id?: string;
+  member?: string;
+  private?: boolean;
+  user_id?: string;
 }

@@ -1,3 +1,5 @@
+import { MemberModel } from 'src/workspace/models/member.model';
+
 export interface DashboardModel {
   _id?: string;
   __v?: number;
@@ -5,4 +7,6 @@ export interface DashboardModel {
   title: string;
   board_id: string;
   workspace_id: string;
+  team: Array<MemberModel>;
+  private: boolean;
 }

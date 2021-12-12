@@ -63,11 +63,6 @@ export class WorkspaceController {
     });
   }
 
-  @Post('members')
-  async getMembers(@Body() members: Array<MemberDTO>): Promise<HttpResponse> {
-    return await this.userService.getMembers(members);
-  }
-
   @Post('')
   async addWorkspace(@Body() workspace: WorkspaceDTO): Promise<HttpResponse> {
     return await this.workspaceService.addWorkspace(workspace);
@@ -76,6 +71,11 @@ export class WorkspaceController {
   @Post('member')
   async addTeamMember(@Body() addMember: AddMemberDTO): Promise<HttpResponse> {
     return await this.workspaceService.addTeamMember(addMember);
+  }
+
+  @Post('members')
+  async getMembers(@Body() members: Array<MemberDTO>): Promise<HttpResponse> {
+    return await this.userService.getMembers(members);
   }
 
   @Post('is_member')

@@ -7,7 +7,10 @@ import { HttpResponse } from 'src/shared/models/http-response.model';
 import { QueryBuilderModel } from 'src/workspace/models/querybuilder.model';
 import { WorkspaceService } from 'src/workspace/services/workspace.service';
 import { AddDashboardDTO } from '../dtos/add-dashboard.dto';
+import { AddMemberDTO } from '../dtos/add-member-dashboard.dto';
+import { IfMemberDTO } from '../dtos/if-member-dashboard.dto';
 import { UpdateDashboardDTO } from '../dtos/update-dashboard.dto';
+import { UpdateMemberDTO } from '../dtos/update-member-dashboard.dto';
 import { AggregateDashboardModel } from '../models/aggregate-dashboard.model';
 import { DashboardModel } from '../models/dashboard.model';
 import { QueryparamsDashboardModel } from '../models/queryparams-dashboard.model';
@@ -218,6 +221,159 @@ export class DashboardService {
         }
       },
     );
+  }
+
+  async addTeamMember(addMember: AddMemberDTO): Promise<HttpResponse> {
+    return await this.getDashboards({
+      board_id: addMember.board_id,
+    })
+      .then((dashboard: HttpResponse) => {
+        if (dashboard.statusCode === 200) {
+          const member = {
+            _id: addMember.user_id,
+            role: addMember.role,
+          };
+          if (dashboard.data[0].team.indexOf(member) === -1) {
+            dashboard.data[0].team.push(member);
+            return this.dashboard
+              .updateOne({ board_id: addMember.board_id }, dashboard.data[0])
+              .then(() => {
+                return {
+                  statusCode: 200,
+                  message: `Added team member`,
+                  data: dashboard.data[0],
+                };
+              })
+              .catch(() => {
+                return {
+                  statusCode: 400,
+                  message: `Error while updating dashboard team members`,
+                };
+              });
+          } else {
+            return {
+              statusCode: 400,
+              message: `Error member is already in the team`,
+            };
+          }
+        } else {
+          return {
+            statusCode: 400,
+            message: `Error couldn't find dashboard`,
+          };
+        }
+      })
+      .catch(() => {
+        return {
+          statusCode: 400,
+          message: `Error while fetching dashboard`,
+        };
+      });
+  }
+
+  async updateTeamMember(members: UpdateMemberDTO): Promise<HttpResponse> {
+    return await this.dashboard
+      .updateOne({ board_id: members.board_id }, { team: members.team })
+      .then((res) => {
+        if (res.modifiedCount > 0) {
+          return {
+            statusCode: 200,
+            message: 'Dashboard updated succesfully',
+            data: members.team,
+          };
+        } else {
+          return {
+            statusCode: 400,
+            message: "Error couldn't find dashboard",
+          };
+        }
+      })
+      .catch(() => {
+        return {
+          statusCode: 400,
+          message: 'Error while updating dashboard',
+        };
+      });
+  }
+
+  async deleteTeamMember(queryparams: QueryparamsDashboardModel) {
+    return this.getDashboards({ id: queryparams.board_id })
+      .then((dashboard: HttpResponse) => {
+        if (dashboard.statusCode === 200) {
+          const index = dashboard.data[0].team.findIndex(
+            (obj) => obj._id === queryparams.user_id,
+          );
+          if (index > -1) {
+            dashboard.data[0].team.splice(index, 1);
+            if (dashboard.data[0].team.length > 0) {
+              return this.dashboard
+                .updateOne({ _id: queryparams.board_id }, dashboard.data[0])
+                .then(() => {
+                  return {
+                    statusCode: 200,
+                    message: `Deleted dashboard member succesfully`,
+                    data: dashboard.data[0],
+                  };
+                })
+                .catch(() => {
+                  return {
+                    statusCode: 400,
+                    message: `Error while updating dashboard member`,
+                  };
+                });
+            } else {
+              return {
+                statusCode: 400,
+                message: `Error couldn't delete last dashboard member`,
+              };
+            }
+          } else {
+            return {
+              statusCode: 400,
+              message: `Error couldn't find dashboard member`,
+            };
+          }
+        } else {
+          return {
+            statusCode: 400,
+            message: `Error couldn't find dashboard`,
+          };
+        }
+      })
+      .catch(() => {
+        return {
+          statusCode: 400,
+          message: `Error while fetching dashboard`,
+        };
+      });
+  }
+
+  async checkIfMember(user: IfMemberDTO): Promise<HttpResponse> {
+    return this.getDashboards({
+      board_id: user.board_id,
+      member: user.user_id,
+    })
+      .then((res: HttpResponse) => {
+        if (res.data.length > 0) {
+          return {
+            statusCode: 200,
+            message: `Member is part of the dashboard`,
+            data: true,
+          };
+        } else {
+          return {
+            statusCode: 200,
+            message: `Member is not part of the dashboard`,
+            data: false,
+          };
+        }
+      })
+      .catch(() => {
+        return {
+          statusCode: 400,
+          message: `Error while fetching dashboard`,
+        };
+      });
   }
 
   async generateId(): Promise<string> {

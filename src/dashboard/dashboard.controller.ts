@@ -14,10 +14,18 @@ import { UpdateDashboardDTO } from './dtos/update-dashboard.dto';
 import { QueryparamsDashboardModel } from './models/queryparams-dashboard.model';
 import { DashboardService } from './services/dashboard.service';
 import { ApiTags } from '@nestjs/swagger';
+import { MemberDTO } from 'src/workspace/dtos/member.dto';
+import { UserService } from 'src/users/services/user.service';
+import { IfMemberDTO } from './dtos/if-member-dashboard.dto';
+import { UpdateMemberDTO } from './dtos/update-member-dashboard.dto';
+import { AddMemberDTO } from './dtos/add-member-dashboard.dto';
 @ApiTags('Dashboards')
 @Controller('dashboard')
 export class DashboardController {
-  constructor(private dashboardService: DashboardService) {}
+  constructor(
+    private dashboardService: DashboardService,
+    private userService: UserService,
+  ) {}
 
   @Get('')
   async getDashboards(
@@ -50,6 +58,21 @@ export class DashboardController {
     return await this.dashboardService.addDashboard(dashboard);
   }
 
+  @Post('member')
+  async addTeamMember(@Body() addMember: AddMemberDTO): Promise<HttpResponse> {
+    return await this.dashboardService.addTeamMember(addMember);
+  }
+
+  @Post('members')
+  async getMembers(@Body() members: Array<MemberDTO>): Promise<HttpResponse> {
+    return await this.userService.getMembers(members);
+  }
+
+  @Post('is_member')
+  async checkIfMember(@Body() member: IfMemberDTO): Promise<HttpResponse> {
+    return await this.dashboardService.checkIfMember(member);
+  }
+
   @Patch('')
   async updateDashboard(
     @Body() dashboard: UpdateDashboardDTO,
@@ -57,10 +80,22 @@ export class DashboardController {
     return await this.dashboardService.updateDashboard(dashboard);
   }
 
+  @Patch('member')
+  async updateTeamMember(
+    @Body() members: UpdateMemberDTO,
+  ): Promise<HttpResponse> {
+    return await this.dashboardService.updateTeamMember(members);
+  }
+
   @Delete('/:board_id')
   async deleteList(
     @Param() param: QueryparamsDashboardModel,
   ): Promise<HttpResponse> {
     return await this.dashboardService.deleteDashboard(param.board_id);
+  }
+
+  @Delete('member/:workspace_id/:user_id')
+  async deleteTeamMember(@Param() params: QueryparamsDashboardModel) {
+    return await this.dashboardService.deleteTeamMember(params);
   }
 }

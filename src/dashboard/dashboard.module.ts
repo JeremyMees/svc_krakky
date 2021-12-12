@@ -5,6 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Dashboard, DashboardSchema } from './schemas/dashboard.schema';
 import { WorkspaceModule } from 'src/workspace/workspace.module';
 import { ListModule } from 'src/list/list.module';
+import { UserModule } from 'src/users/users.module';
 
 @Module({
   providers: [DashboardService],
@@ -12,6 +13,7 @@ import { ListModule } from 'src/list/list.module';
   exports: [DashboardService],
   imports: [
     forwardRef(() => WorkspaceModule),
+    forwardRef(() => UserModule),
     forwardRef(() => ListModule),
     MongooseModule.forFeature([
       { name: Dashboard.name, schema: DashboardSchema },

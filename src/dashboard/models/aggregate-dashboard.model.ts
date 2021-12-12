@@ -1,3 +1,4 @@
+import { MemberModel } from 'src/workspace/models/member.model';
 import { CardModel } from '../../card/models/card.model';
 import { ListModel } from '../../list/models/list.model';
 
@@ -10,4 +11,6 @@ export interface AggregateDashboardModel {
   workspace: string;
   lists: Array<ListModel>;
   cards: Array<CardModel>;
+  team: Array<MemberModel>;
+  private: boolean;
 }

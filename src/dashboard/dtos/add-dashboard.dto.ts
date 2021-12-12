@@ -1,5 +1,14 @@
-import { IsDefined, IsOptional, IsString, Length } from 'class-validator';
+import {
+  IsArray,
+  IsBoolean,
+  IsDefined,
+  IsOptional,
+  IsString,
+  Length,
+} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
+import { MemberDTO } from 'src/workspace/dtos/member.dto';
 export class AddDashboardDTO {
   @ApiProperty({ required: false })
   @IsString()
@@ -21,4 +30,15 @@ export class AddDashboardDTO {
   @IsString()
   @IsDefined()
   created_by: string;
+
+  @ApiProperty({ required: false, default: [], isArray: true })
+  @IsOptional()
+  @IsArray()
+  @Type(() => MemberDTO)
+  team: Array<MemberDTO>;
+
+  @ApiProperty({ required: false })
+  @IsDefined()
+  @IsBoolean()
+  private: boolean;
 }
