@@ -1,4 +1,5 @@
 import {
+  IsDate,
   IsDefined,
   IsNumber,
   IsOptional,
@@ -57,4 +58,14 @@ export class CardDTO {
   @IsString()
   @IsDefined()
   assignees: Array<string>;
+
+  @ApiProperty({ required: false })
+  @IsDate()
+  @IsOptional()
+  start_date: Date;
+
+  @ApiProperty({ required: false })
+  @IsDate()
+  @IsOptional()
+  due_date: Date;
 }

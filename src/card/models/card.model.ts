@@ -5,6 +5,8 @@ export interface CardModel {
   list_id: string;
   created_by: string;
   created_at?: string;
+  start_date?: Date;
+  due_date?: Date;
   index?: number;
   color: string;
   priority?: string;

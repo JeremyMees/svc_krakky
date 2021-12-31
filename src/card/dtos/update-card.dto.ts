@@ -1,4 +1,5 @@
 import {
+  IsDate,
   IsDefined,
   IsEnum,
   IsOptional,
@@ -49,4 +50,14 @@ export class UpdateCardDTO {
   @IsString()
   @IsOptional()
   assignees: Array<string>;
+
+  @ApiProperty({ required: false })
+  @IsDate()
+  @IsOptional()
+  start_date: Date;
+
+  @ApiProperty({ required: false })
+  @IsDate()
+  @IsOptional()
+  due_date: Date;
 }

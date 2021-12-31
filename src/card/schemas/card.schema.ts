@@ -34,6 +34,12 @@ export class Card {
 
   @Prop({ required: true })
   assignees: Array<string>;
+
+  @Prop({ required: false })
+  start_date: Date;
+
+  @Prop({ required: false })
+  due_date: Date;
 }
 
 export const CardSchema = SchemaFactory.createForClass(Card);
