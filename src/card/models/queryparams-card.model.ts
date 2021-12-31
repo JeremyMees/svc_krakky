@@ -1,5 +1,5 @@
 export interface QueryparamsCardModel {
-  list_id?: string;
+  list_id_card?: string;
   board_id?: string;
-  card_id?: string;
+  _id?: string;
 }

@@ -10,6 +10,9 @@ import { CardModel } from '../models/card.model';
 import { QueryparamsCardModel } from '../models/queryparams-card.model';
 import { Card, CardDocument } from '../schemas/card.schema';
 import { UpdateCardDTO } from '../dtos/update-card.dto';
+import { AssigneeModel } from '../models/assignee.model';
+import { UserService } from 'src/users/services/user.service';
+import { GetAssigneesDTO } from '../dtos/assignees.dto';
 @Injectable()
 export class CardService {
   mongoKeys = MONGO_KEYS;
@@ -18,6 +21,8 @@ export class CardService {
     private card: Model<CardDocument>,
     @Inject(forwardRef(() => ListService))
     private listService: ListService,
+    @Inject(forwardRef(() => UserService))
+    private userService: UserService,
   ) {}
 
   async getCards(queryparams: QueryparamsCardModel): Promise<Array<CardModel>> {
@@ -34,15 +39,23 @@ export class CardService {
 
   async addCard(card: CardModel): Promise<HttpResponse> {
     const cards: Array<CardModel> = await this.getCards({
-      list_id: card.list_id,
+      list_id_card: card.list_id,
     });
     return this.listService
       .getLists({ list_id: card.list_id })
       .then((lists: Array<ListModel>) => {
         if (lists.length > 0) {
-          card.color === undefined ? (card.color = 'white') : null;
+          card.color === undefined ? (card.color = 'grey') : null;
           card.assignees === undefined ? (card.assignees = []) : null;
-          card.index = cards.length;
+          if (cards.length === 0) {
+            card.index = 0;
+          } else {
+            const highest_index_card: CardModel = cards.reduce(
+              (prev: CardModel, current: CardModel) =>
+                prev.index > current.index ? prev : current,
+            );
+            card.index = highest_index_card.index + 1;
+          }
           const newCard = new this.card(card);
           return newCard
             .save()
@@ -75,9 +88,9 @@ export class CardService {
   }
 
   async updateCard(card: UpdateCardDTO): Promise<HttpResponse> {
-    const id: string = card.card_id;
+    const id: string = card._id;
     delete card.board_id;
-    delete card.card_id;
+    delete card._id;
     return this.card
       .updateOne({ _id: id }, card)
       .then(() => {
@@ -128,6 +141,41 @@ export class CardService {
           message: 'Error while trying to delete coherent cards',
         };
       });
+  }
+
+  async getAssignees(body: GetAssigneesDTO): Promise<HttpResponse> {
+    let assignees: Array<AssigneeModel> = [];
+    await this.asyncForEach(
+      body.assignees,
+      async (assignee: { _id: string }) => {
+        await this.userService
+          .getUser({ id: assignee._id })
+          .then((res: HttpResponse) => {
+            if (res.statusCode === 200) {
+              assignees.push({
+                _id: res.data._id,
+                email: res.data.email,
+                img: res.data.img,
+                img_query: res.data.img_query,
+                username: res.data.username,
+              });
+            } else {
+              return res;
+            }
+          });
+      },
+    );
+    return {
+      statusCode: 200,
+      message: `Assignees fetched succesfullly`,
+      data: assignees,
+    };
+  }
+
+  async asyncForEach(array: any, callback: any) {
+    for (let index = 0; index < array.length; index++) {
+      await callback(array[index], index, array);
+    }
   }
 
   async queryBuilder(obj: QueryBuilderModel) {

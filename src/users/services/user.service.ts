@@ -19,6 +19,7 @@ import { ResetPasswordModel } from '../models/reset-password.model';
 import { MailService } from 'src/mail/mail.service';
 import { MemberModel } from 'src/workspace/models/member.model';
 import { UpdateUserImgDTO } from '../dtos/update-user-img.dto';
+import { AssigneeModel } from 'src/card/models/assignee.model';
 
 @Injectable()
 export class UserService {
@@ -418,7 +419,7 @@ export class UserService {
   }
 
   async getMembers(body: Array<MemberModel>): Promise<HttpResponse> {
-    let teamMembers: Array<any> = [];
+    let teamMembers: Array<AssigneeModel> = [];
     await this.asyncForEach(body, async (member: MemberModel) => {
       await this.getUser({ id: member._id }).then((res: HttpResponse) => {
         if (res.statusCode === 200) {
@@ -426,6 +427,8 @@ export class UserService {
             _id: res.data._id,
             username: res.data.username,
             email: res.data.email,
+            img: res.data.img,
+            img_query: res.data.img_query,
           });
         } else {
           return res;

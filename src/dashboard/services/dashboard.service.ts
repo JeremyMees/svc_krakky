@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { ListService } from 'src/list/services/list.service';
 import { MONGO_KEYS } from 'src/shared/data/mongo-keys';
 import { HttpResponse } from 'src/shared/models/http-response.model';
+import { UserService } from 'src/users/services/user.service';
 import { QueryBuilderModel } from 'src/workspace/models/querybuilder.model';
 import { WorkspaceService } from 'src/workspace/services/workspace.service';
 import { AddDashboardDTO } from '../dtos/add-dashboard.dto';
@@ -63,16 +64,16 @@ export class DashboardService {
           {
             $lookup: {
               from: 'cards',
-              localField: 'boardId',
-              foreignField: 'boardId',
+              localField: 'board_id',
+              foreignField: 'board_id',
               as: 'cards',
             },
           },
           {
             $lookup: {
               from: 'lists',
-              localField: 'boardId',
-              foreignField: 'boardId',
+              localField: 'board_id',
+              foreignField: 'board_id',
               as: 'lists',
             },
           },

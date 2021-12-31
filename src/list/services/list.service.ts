@@ -88,8 +88,8 @@ export class ListService {
   }
 
   async updateList(list: UpdateListDTO): Promise<HttpResponse> {
-    const id: string = list.list_id;
-    delete list.list_id;
+    const id: string = list._id;
+    delete list._id;
     delete list.board_id;
     return this.list
       .updateOne({ _id: id }, list)
@@ -104,12 +104,12 @@ export class ListService {
       });
   }
 
-  async deleteList(list_id: string): Promise<HttpResponse> {
-    if (list_id) {
+  async deleteList(_id: string): Promise<HttpResponse> {
+    if (_id) {
       return await this.list
-        .deleteOne({ list_id })
+        .deleteOne({ _id })
         .then(() => {
-          return this.cardService.deleteMultipleCards({ list_id: list_id });
+          return this.cardService.deleteMultipleCards({ list_id: _id });
         })
         .catch(() => {
           return {

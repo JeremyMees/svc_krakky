@@ -5,6 +5,7 @@ import { QueryparamsCardModel } from './models/queryparams-card.model';
 import { CardService } from './services/card.service';
 import { ApiTags } from '@nestjs/swagger';
 import { UpdateCardDTO } from './dtos/update-card.dto';
+import { GetAssigneesDTO } from './dtos/assignees.dto';
 @ApiTags('Cards')
 @Controller('card')
 export class CardController {
@@ -13,6 +14,13 @@ export class CardController {
   @Post('')
   async addCard(@Body() card: AddCardDTO): Promise<HttpResponse> {
     return await this.cardService.addCard(card);
+  }
+
+  @Post('assignees')
+  async getAssignees(
+    @Body() assignees: GetAssigneesDTO,
+  ): Promise<HttpResponse> {
+    return await this.cardService.getAssignees(assignees);
   }
 
   @Patch('')

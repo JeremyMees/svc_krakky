@@ -1,5 +1,7 @@
 export interface QueryBuilderModel {
   id?: string;
+  _id?: string;
+  list_id_card?: string;
   member?: string;
   name?: string;
   username?: string;

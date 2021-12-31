@@ -2,6 +2,7 @@ import { forwardRef, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Card, CardSchema } from 'src/card/schemas/card.schema';
 import { ListModule } from 'src/list/list.module';
+import { UserModule } from 'src/users/users.module';
 import { CardController } from './card.controller';
 import { CardService } from './services/card.service';
 
@@ -11,6 +12,7 @@ import { CardService } from './services/card.service';
   exports: [CardService],
   imports: [
     forwardRef(() => ListModule),
+    forwardRef(() => UserModule),
     MongooseModule.forFeature([{ name: Card.name, schema: CardSchema }]),
   ],
 })

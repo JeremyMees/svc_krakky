@@ -5,7 +5,7 @@ export class DeleteCardDTO {
   @ApiProperty({ required: true })
   @IsString()
   @IsDefined()
-  card_id: string;
+  _id: string;
 
   @ApiProperty({ required: true })
   @IsString()

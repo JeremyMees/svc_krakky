@@ -1,5 +1,6 @@
 export const MONGO_KEYS = {
   id: '_id',
+  _id: '_id',
   member: 'team._id',
   name: 'workspace',
   title: 'title',
@@ -8,6 +9,7 @@ export const MONGO_KEYS = {
   createdby: 'created_by',
   board_id: 'board_id',
   list_id: '_id',
+  list_id_card: 'list_id',
   card_id: '_id',
   workspace: 'workspace',
   workspace_id: 'workspace_id',
