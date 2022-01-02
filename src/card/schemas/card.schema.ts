@@ -40,6 +40,9 @@ export class Card {
 
   @Prop({ required: false })
   due_date: Date;
+
+  @Prop({ required: false })
+  completion_date: Date;
 }
 
 export const CardSchema = SchemaFactory.createForClass(Card);

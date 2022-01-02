@@ -68,4 +68,9 @@ export class CardDTO {
   @IsDate()
   @IsOptional()
   due_date: Date;
+
+  @ApiProperty({ required: false })
+  @IsDate()
+  @IsOptional()
+  completion_date: Date;
 }

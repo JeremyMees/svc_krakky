@@ -7,6 +7,7 @@ export interface CardModel {
   created_at?: string;
   start_date?: Date;
   due_date?: Date;
+  completion_date?: Date;
   index?: number;
   color: string;
   priority?: string;
