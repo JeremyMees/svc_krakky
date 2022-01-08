@@ -1,4 +1,5 @@
 import {
+  IsArray,
   IsDate,
   IsDefined,
   IsNumber,
@@ -7,6 +8,8 @@ import {
   Length,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
+import { CommentDTO } from './comment.dto';
 export class CardDTO {
   @ApiProperty({ required: true })
   @IsString()
@@ -73,4 +76,10 @@ export class CardDTO {
   @IsDate()
   @IsOptional()
   completion_date: Date;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsArray()
+  @Type(() => CommentDTO)
+  comments: Array<CommentDTO>;
 }

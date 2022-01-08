@@ -1,3 +1,5 @@
+import { CommentModel } from './comment.model';
+
 export interface CardModel {
   board_id: string;
   title: string;
@@ -8,6 +10,7 @@ export interface CardModel {
   start_date?: Date;
   due_date?: Date;
   completion_date?: Date;
+  comments?: Array<CommentModel>;
   index?: number;
   color: string;
   priority?: string;

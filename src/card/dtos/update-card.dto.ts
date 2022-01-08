@@ -1,4 +1,5 @@
 import {
+  IsArray,
   IsDate,
   IsDefined,
   IsEnum,
@@ -8,6 +9,8 @@ import {
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Colors } from '../../shared/enums/color.enum';
+import { Type } from 'class-transformer';
+import { CommentDTO } from './comment.dto';
 
 export class UpdateCardDTO {
   @ApiProperty({ required: true })
@@ -65,4 +68,10 @@ export class UpdateCardDTO {
   @IsDate()
   @IsOptional()
   completion_date: Date;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsArray()
+  @Type(() => CommentDTO)
+  comments: Array<CommentDTO>;
 }

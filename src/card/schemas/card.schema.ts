@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
+import { Comment } from './comment.schema';
 
 export type CardDocument = Card & Document;
 
@@ -43,6 +44,9 @@ export class Card {
 
   @Prop({ required: false })
   completion_date: Date;
+
+  @Prop({ required: false })
+  comments: Array<Comment>;
 }
 
 export const CardSchema = SchemaFactory.createForClass(Card);
