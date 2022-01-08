@@ -1,9 +1,14 @@
 export enum Colors {
   'white',
   'grey',
-  'red',
+  'black',
+  'pink',
+  'purple',
+  'lightblue',
+  'turquoise',
+  'lightgreen',
   'yellow',
-  'green',
-  'blue',
   'orange',
+  'red',
+  'brown',
 }
