@@ -8,5 +8,6 @@ export interface QueryparamsDashboardModel {
   workspace_id?: string;
   member?: string;
   private?: boolean;
+  inactive?: boolean;
   user_id?: string;
 }

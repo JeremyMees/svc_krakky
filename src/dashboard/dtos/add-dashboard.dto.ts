@@ -37,8 +37,13 @@ export class AddDashboardDTO {
   @Type(() => MemberDTO)
   team: Array<MemberDTO>;
 
-  @ApiProperty({ required: false })
+  @ApiProperty({ required: true })
   @IsDefined()
   @IsBoolean()
   private: boolean;
+
+  @ApiProperty({ required: true })
+  @IsDefined()
+  @IsBoolean()
+  inactive: boolean;
 }

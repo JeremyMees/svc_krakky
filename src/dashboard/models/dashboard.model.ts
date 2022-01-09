@@ -9,4 +9,5 @@ export interface DashboardModel {
   workspace_id: string;
   team: Array<MemberModel>;
   private: boolean;
+  inactive: boolean;
 }

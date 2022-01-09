@@ -31,4 +31,9 @@ export class UpdateDashboardDTO {
   @IsOptional()
   @IsBoolean()
   private: boolean;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsBoolean()
+  inactive: boolean;
 }

@@ -23,6 +23,9 @@ export class Dashboard {
 
   @Prop({ required: true })
   private: boolean;
+
+  @Prop({ required: true })
+  inactive: boolean;
 }
 
 export const DashboardSchema = SchemaFactory.createForClass(Dashboard);

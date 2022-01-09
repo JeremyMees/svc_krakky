@@ -13,4 +13,5 @@ export interface AggregateDashboardModel {
   cards: Array<CardModel>;
   team: Array<MemberModel>;
   private: boolean;
+  inactive: boolean;
 }
