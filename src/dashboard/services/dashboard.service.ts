@@ -105,6 +105,9 @@ export class DashboardService {
 
   async addDashboard(dashboard: AddDashboardDTO): Promise<HttpResponse> {
     dashboard.board_id = await this.generateId();
+    const new_dashboard = dashboard as DashboardModel;
+    new_dashboard.created_at = `${Date.now()}`;
+    new_dashboard.updated_at = new_dashboard.created_at;
     return this.getDashboards({
       createdby: dashboard.created_by,
       title: dashboard.title,
@@ -117,7 +120,7 @@ export class DashboardService {
             })
             .then((workspace: HttpResponse) => {
               if (workspace.data.length > 0) {
-                const newDashboard = new this.dashboard(dashboard);
+                const newDashboard = new this.dashboard(new_dashboard);
                 return newDashboard
                   .save()
                   .then(() => {
@@ -165,8 +168,10 @@ export class DashboardService {
   async updateDashboard(dashboard: UpdateDashboardDTO): Promise<HttpResponse> {
     const id: string = dashboard.board_id;
     delete dashboard.board_id;
+    const updated_dashboard = dashboard as DashboardModel;
+    updated_dashboard.updated_at = `${Date.now()}`;
     return this.dashboard
-      .updateOne({ board_id: id }, dashboard)
+      .updateOne({ board_id: id }, updated_dashboard)
       .then(() => {
         return {
           statusCode: 200,
@@ -235,6 +240,7 @@ export class DashboardService {
             role: addMember.role,
           };
           if (dashboard.data[0].team.indexOf(member) === -1) {
+            dashboard.data[0].updated_at = `${Date.now()}`;
             dashboard.data[0].team.push(member);
             return this.dashboard
               .updateOne({ board_id: addMember.board_id }, dashboard.data[0])
@@ -274,7 +280,10 @@ export class DashboardService {
 
   async updateTeamMember(members: UpdateMemberDTO): Promise<HttpResponse> {
     return await this.dashboard
-      .updateOne({ board_id: members.board_id }, { team: members.team })
+      .updateOne(
+        { board_id: members.board_id },
+        { team: members.team, updated_at: `${Date.now()}` },
+      )
       .then((res) => {
         if (res.modifiedCount > 0) {
           return {

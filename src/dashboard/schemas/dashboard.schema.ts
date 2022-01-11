@@ -9,6 +9,12 @@ export class Dashboard {
   @Prop({ required: true })
   created_by: string;
 
+  @Prop({ required: false })
+  created_at: string;
+
+  @Prop({ required: false })
+  updated_at: string;
+
   @Prop({ required: true })
   title: string;
 

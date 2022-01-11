@@ -25,6 +25,9 @@ export class Card {
   created_at: string;
 
   @Prop({ required: true })
+  updated_at: string;
+
+  @Prop({ required: true })
   index: number;
 
   @Prop({ required: true })

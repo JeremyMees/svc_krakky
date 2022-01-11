@@ -45,8 +45,9 @@ export class CardService {
       .getLists({ list_id: card.list_id })
       .then((lists: Array<ListModel>) => {
         if (lists.length > 0) {
-          card.color === undefined ? (card.color = 'grey') : null;
+          card.color === undefined ? (card.color = 'white') : null;
           card.assignees === undefined ? (card.assignees = []) : null;
+          card.updated_at = card.created_at;
           if (cards.length === 0) {
             card.index = 0;
           } else {
@@ -91,6 +92,7 @@ export class CardService {
     const id: string = card._id;
     delete card.board_id;
     delete card._id;
+    card.updated_at = `${Date.now()}`;
     return this.card
       .updateOne({ _id: id }, card)
       .then(() => {
