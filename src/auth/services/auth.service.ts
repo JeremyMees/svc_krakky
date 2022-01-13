@@ -73,10 +73,10 @@ export class AuthService {
             .then((res: boolean) => {
               if (res) {
                 const data = JSON.parse(JSON.stringify(response.data));
-                const nowPlusEightHoures: number = (Date.now() +
-                  60 * 60 * 8 * 1000) as number;
+                const nowPlusWeek: number = (Date.now() + 604800000) as number;
                 delete data.password;
-                data.token_expire_time = nowPlusEightHoures;
+                delete data.marketing;
+                data.token_expire_time = nowPlusWeek;
                 data.acces_token = this.jwtService.sign(credentials);
                 return {
                   statusCode: 200,

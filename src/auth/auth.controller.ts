@@ -6,6 +6,7 @@ import { JwtAuthGuard } from './guards/jwt.guard';
 import { AuthService } from './services/auth.service';
 import { ApiTags } from '@nestjs/swagger';
 import { Public } from 'src/shared/decorator/skip-auth.decorator';
+import { UserModel } from 'src/users/models/user.model';
 @ApiTags('Authentication')
 @Controller('auth')
 export class AuthController {
@@ -16,6 +17,16 @@ export class AuthController {
   @Post('login')
   async login(@Body() user: CredentialsDTO) {
     return this.authService.login(user);
+  }
+
+  @Public()
+  @Post('token')
+  async getToken(@Body() user: CredentialsDTO) {
+    const fetchedUser = await this.authService.login(user);
+    return {
+      token_expire_time: fetchedUser.data.token_expire_time,
+      acces_token: fetchedUser.data.acces_token,
+    };
   }
 
   @Public()
