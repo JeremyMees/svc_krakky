@@ -6,7 +6,6 @@ import { JwtAuthGuard } from './guards/jwt.guard';
 import { AuthService } from './services/auth.service';
 import { ApiTags } from '@nestjs/swagger';
 import { Public } from 'src/shared/decorator/skip-auth.decorator';
-import { UserModel } from 'src/users/models/user.model';
 @ApiTags('Authentication')
 @Controller('auth')
 export class AuthController {
