@@ -10,11 +10,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { MemberDTO } from 'src/workspace/dtos/member.dto';
 export class AddDashboardDTO {
-  @ApiProperty({ required: false })
-  @IsString()
-  @IsOptional()
-  board_id: string;
-
   @ApiProperty({ required: true })
   @IsString()
   @IsDefined()

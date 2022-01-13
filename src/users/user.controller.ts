@@ -18,7 +18,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { Public } from 'src/shared/decorator/skip-auth.decorator';
 import { UpdateUserImgDTO } from './dtos/update-user-img.dto';
 @ApiTags('Users')
-@Controller('users')
+@Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}
 

@@ -12,6 +12,7 @@ export class CommentDTO {
   @IsDefined()
   created_at: number;
 
+  @ApiProperty({ required: true })
   @IsNumber()
   @IsDefined()
   updated_at: number;

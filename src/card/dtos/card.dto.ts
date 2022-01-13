@@ -40,7 +40,7 @@ export class CardDTO {
   @ApiProperty({ required: true })
   @IsString()
   @IsDefined()
-  created_at: string;
+  created_at: number;
 
   @ApiProperty({ required: true })
   @IsNumber()

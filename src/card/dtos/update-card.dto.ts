@@ -74,9 +74,4 @@ export class UpdateCardDTO {
   @IsArray()
   @Type(() => CommentDTO)
   comments: Array<CommentDTO>;
-
-  @ApiProperty({ required: false })
-  @IsString()
-  @IsOptional()
-  updated_at: string;
 }

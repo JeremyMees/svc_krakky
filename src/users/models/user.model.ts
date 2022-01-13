@@ -7,4 +7,5 @@ export interface UserModel {
   username?: string;
   password: string;
   verified?: boolean;
+  marketing: boolean;
 }

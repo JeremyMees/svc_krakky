@@ -6,8 +6,8 @@ export interface CardModel {
   content?: string;
   list_id: string;
   created_by: string;
-  created_at?: string;
-  updated_at?: string;
+  created_at?: number;
+  updated_at?: number;
   start_date?: Date;
   due_date?: Date;
   completion_date?: Date;

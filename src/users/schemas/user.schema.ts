@@ -26,6 +26,9 @@ export class User {
 
   @Prop({ required: true })
   verified: boolean;
+
+  @Prop({ required: true })
+  marketing: boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

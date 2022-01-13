@@ -33,14 +33,14 @@ export class DashboardController {
     @Query('board_id') board_id?: string,
     @Query('title') title?: string,
     @Query('createdby') createdby?: string,
-    @Query('workspace') workspace?: string,
+    @Query('workspace_id') workspace_id?: string,
   ): Promise<HttpResponse> {
     return await this.dashboardService.getDashboards({
       id,
       board_id,
       title,
       createdby,
-      workspace,
+      workspace_id,
     });
   }
 
@@ -94,7 +94,7 @@ export class DashboardController {
     return await this.dashboardService.deleteDashboard(param.board_id);
   }
 
-  @Delete('member/:workspace_id/:user_id')
+  @Delete('member/:board_id/:user_id')
   async deleteTeamMember(@Param() params: QueryparamsDashboardModel) {
     return await this.dashboardService.deleteTeamMember(params);
   }

@@ -11,6 +11,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Colors } from '../../shared/enums/color.enum';
 import { CommentDTO } from './comment.dto';
 import { Type } from 'class-transformer';
+import { Priority } from 'src/shared/enums/priority.enum';
 export class AddCardDTO {
   @ApiProperty({ required: true })
   @IsString()
@@ -38,18 +39,13 @@ export class AddCardDTO {
   @IsDefined()
   created_by: string;
 
-  @ApiProperty({ required: true })
-  @IsString()
-  @IsDefined()
-  created_at: string;
-
   @ApiProperty({ required: false, enum: Colors })
   @IsEnum(Colors)
   @IsOptional()
   color: string;
 
-  @ApiProperty({ required: false })
-  @IsString()
+  @ApiProperty({ required: false, enum: Priority })
+  @IsEnum(Priority)
   @IsOptional()
   priority: string;
 

@@ -22,10 +22,10 @@ export class Card {
   created_by: string;
 
   @Prop({ required: true })
-  created_at: string;
+  created_at: number;
 
   @Prop({ required: true })
-  updated_at: string;
+  updated_at: number;
 
   @Prop({ required: true })
   index: number;

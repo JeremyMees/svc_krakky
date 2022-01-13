@@ -40,4 +40,9 @@ export class UserDTO {
   @IsOptional()
   @IsBoolean()
   verified: boolean;
+
+  @ApiProperty({ required: true })
+  @IsDefined()
+  @IsBoolean()
+  marketing: boolean;
 }

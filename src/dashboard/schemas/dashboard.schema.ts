@@ -10,10 +10,10 @@ export class Dashboard {
   created_by: string;
 
   @Prop({ required: false })
-  created_at: string;
+  created_at: number;
 
   @Prop({ required: false })
-  updated_at: string;
+  updated_at: number;
 
   @Prop({ required: true })
   title: string;

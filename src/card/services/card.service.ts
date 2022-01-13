@@ -92,9 +92,10 @@ export class CardService {
     const id: string = card._id;
     delete card.board_id;
     delete card._id;
-    card.updated_at = `${Date.now()}`;
+    const updated_card: any = card;
+    updated_card.updated_at = Date.now();
     return this.card
-      .updateOne({ _id: id }, card)
+      .updateOne({ _id: id }, updated_card)
       .then(() => {
         return {
           statusCode: 200,
