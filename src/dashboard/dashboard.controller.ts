@@ -31,6 +31,7 @@ export class DashboardController {
   async getDashboards(
     @Query('id') id?: string,
     @Query('board_id') board_id?: string,
+    @Query('member') member?: string,
     @Query('title') title?: string,
     @Query('createdby') createdby?: string,
     @Query('workspace_id') workspace_id?: string,
@@ -41,6 +42,7 @@ export class DashboardController {
       title,
       createdby,
       workspace_id,
+      member
     });
   }
 

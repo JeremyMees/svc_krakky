@@ -37,6 +37,58 @@ export class CardService {
       });
   }
 
+  async getCardsCreatedBy(params: QueryparamsCardModel): Promise<HttpResponse> {
+    if (params.user_id) {
+      return this.card
+        .find({ created_by: params.user_id })
+        .then((cards: Array<CardModel>) => {
+          return {
+            statusCode: 200,
+            message: 'Fetched cards succesfully',
+            data: cards,
+          };
+        })
+        .catch((err) => {
+          console.log(err);
+          return {
+            statusCode: 400,
+            message: 'Error while fetching cards',
+          };
+        });
+    } else {
+      return {
+        statusCode: 400,
+        message: 'No user id provided',
+      };
+    }
+  }
+
+  async getCardsAssigned(params: QueryparamsCardModel): Promise<HttpResponse> {
+    if (params.user_id) {
+      return this.card
+        .find({ 'assignees._id': params.user_id })
+        .then((cards: Array<CardModel>) => {
+          return {
+            statusCode: 200,
+            message: 'Fetched cards succesfully',
+            data: cards,
+          };
+        })
+        .catch((err) => {
+          console.log(err);
+          return {
+            statusCode: 400,
+            message: 'Error while fetching cards',
+          };
+        });
+    } else {
+      return {
+        statusCode: 400,
+        message: 'No user id provided',
+      };
+    }
+  }
+
   async addCard(card: CardModel): Promise<HttpResponse> {
     const cards: Array<CardModel> = await this.getCards({
       list_id_card: card.list_id,

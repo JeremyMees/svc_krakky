@@ -20,6 +20,7 @@ import { MailService } from 'src/mail/mail.service';
 import { MemberModel } from 'src/workspace/models/member.model';
 import { UpdateUserImgDTO } from '../dtos/update-user-img.dto';
 import { AssigneeModel } from 'src/card/models/assignee.model';
+import { UpdateUserSettingsDTO } from '../dtos/update-settings.dto';
 
 @Injectable()
 export class UserService {
@@ -135,6 +136,7 @@ export class UserService {
                         email: data.updatedUser.email,
                         _id: data.updatedUser._id,
                         verified: data.updatedUser.verified,
+                        marketing: data.updatedUser.marketing,
                       },
                     };
                   })
@@ -151,6 +153,43 @@ export class UserService {
                 };
               }
             });
+        } else {
+          return { statusCode: 400, message: `Error couldn't find user` };
+        }
+      })
+      .catch(() => {
+        return { statusCode: 400, message: `Error while trying to query user` };
+      });
+  }
+
+  async updateUserSettings(data: UpdateUserSettingsDTO): Promise<HttpResponse> {
+    return this.users
+      .findOne({ _id: data._id })
+      .then(async (user: UserModel) => {
+        if (user) {
+          if ('marketing' in data) {
+            return await this.users
+              .updateOne({ _id: data._id }, { marketing: data.marketing })
+              .exec()
+              .then(() => {
+                const updated_user = JSON.parse(JSON.stringify(user));
+                updated_user.marketing = data.marketing;
+                delete updated_user.password;
+                return {
+                  statusCode: 200,
+                  message: `Updated user ${updated_user._id} succesfully`,
+                  data: updated_user,
+                };
+              })
+              .catch(() => {
+                return {
+                  statusCode: 400,
+                  message: `Error while trying to update user ${user._id}`,
+                };
+              });
+          } else {
+            return { statusCode: 400, message: `No settinngs received` };
+          }
         } else {
           return { statusCode: 400, message: `Error couldn't find user` };
         }

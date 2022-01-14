@@ -75,7 +75,6 @@ export class AuthService {
                 const data = JSON.parse(JSON.stringify(response.data));
                 const nowPlusWeek: number = (Date.now() + 604800000) as number;
                 delete data.password;
-                delete data.marketing;
                 data.token_expire_time = nowPlusWeek;
                 data.acces_token = this.jwtService.sign(credentials);
                 return {
