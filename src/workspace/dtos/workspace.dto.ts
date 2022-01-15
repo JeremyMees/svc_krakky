@@ -20,6 +20,16 @@ export class WorkspaceDTO {
   @Length(4, 20)
   workspace: string;
 
+  @ApiProperty({ required: true })
+  @IsString()
+  @IsDefined()
+  color: string;
+
+  @ApiProperty({ required: true })
+  @IsString()
+  @IsDefined()
+  bg_color: string;
+
   @ApiProperty({ required: false, default: [], isArray: true })
   @IsOptional()
   @IsArray()
