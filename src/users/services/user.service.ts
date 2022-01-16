@@ -21,6 +21,7 @@ import { MemberModel } from 'src/workspace/models/member.model';
 import { UpdateUserImgDTO } from '../dtos/update-user-img.dto';
 import { AssigneeModel } from 'src/card/models/assignee.model';
 import { UpdateUserSettingsDTO } from '../dtos/update-settings.dto';
+import { UpdateUserDTO } from '../dtos/update-user.dto';
 
 @Injectable()
 export class UserService {
@@ -112,38 +113,53 @@ export class UserService {
     }
   }
 
-  async patchUser(data: {
-    user: UserModel;
-    updatedUser: UserModel;
-  }): Promise<HttpResponse> {
+  async patchUser(user_to_update: UpdateUserDTO): Promise<HttpResponse> {
     return this.users
-      .findOne({ email: data.user.email })
+      .findOne({ _id: user_to_update._id })
       .then(async (user: UserModel) => {
         if (user) {
           return bcrypt
-            .compare(data.user.password, user.password)
+            .compare(user_to_update.password, user.password)
             .then(async (res: boolean) => {
               if (res) {
+                const updated_user = user_to_update;
+                if (updated_user.new_password) {
+                  updated_user.password = await bcrypt.hash(
+                    updated_user.new_password,
+                    this.salt,
+                  );
+                  delete updated_user.new_password;
+                } else {
+                  delete updated_user.password;
+                }
                 return await this.users
-                  .updateOne({ email: user.email }, data.updatedUser)
+                  .updateOne({ _id: updated_user._id }, updated_user)
                   .exec()
                   .then(() => {
                     return {
                       statusCode: 200,
-                      message: `Updated user ${user._id} succesfully`,
+                      message: `Updated user ${updated_user._id} succesfully`,
                       data: {
-                        username: data.updatedUser.username,
-                        email: data.updatedUser.email,
-                        _id: data.updatedUser._id,
-                        verified: data.updatedUser.verified,
-                        marketing: data.updatedUser.marketing,
+                        username: updated_user.username
+                          ? updated_user.username
+                          : user.username,
+                        email: updated_user.email
+                          ? updated_user.email
+                          : user.email,
+                        _id: updated_user._id,
+                        verified: updated_user.verified
+                          ? updated_user.verified
+                          : user.verified,
+                        marketing: updated_user.marketing
+                          ? updated_user.marketing
+                          : user.marketing,
                       },
                     };
                   })
                   .catch(() => {
                     return {
                       statusCode: 400,
-                      message: `Error while trying to update user ${user._id}`,
+                      message: `Error while trying to update user ${updated_user._id}`,
                     };
                   });
               } else {
