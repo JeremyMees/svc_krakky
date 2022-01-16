@@ -72,15 +72,10 @@ export class UserService {
   }
 
   async addUser(user: UserModel): Promise<HttpResponse> {
-    const usernameUsed = await this.checkUsernameIsUsed({
-      username: user.username,
-    });
     const emailUsed = await this.checkEmailIsUsed({
       email: user.email,
     });
-    if (usernameUsed.data) {
-      return usernameUsed;
-    } else if (emailUsed.data) {
+    if (emailUsed.data) {
       return emailUsed;
     } else {
       const hash: string = await bcrypt.hash(user.password, this.salt);
@@ -289,34 +284,6 @@ export class UserService {
         return {
           statusCode: 400,
           message: `Error while trying to verify user ${param.id}`,
-        };
-      });
-  }
-
-  async checkUsernameIsUsed(obj: { username: string }): Promise<HttpResponse> {
-    return this.users
-      .findOne({ username: obj.username.trim() })
-      .exec()
-      .then((user: UserModel) => {
-        if (user) {
-          return {
-            statusCode: 400,
-            message: `Error username is alreasy in use`,
-            data: true,
-          };
-        } else {
-          return {
-            statusCode: 200,
-            message: `Username is unique`,
-            data: false,
-          };
-        }
-      })
-      .catch(() => {
-        return {
-          statusCode: 400,
-          message: `Error while fetching users`,
-          data: true,
         };
       });
   }

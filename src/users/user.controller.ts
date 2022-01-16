@@ -47,12 +47,6 @@ export class UserController {
   }
 
   @Public()
-  @Post('username')
-  async checkUsernameIsUsed(@Body() user: UsernameDTO): Promise<HttpResponse> {
-    return await this.userService.checkUsernameIsUsed(user);
-  }
-
-  @Public()
   @Post('create_token')
   async createResetPasswordToken(
     @Body() email: EmailDTO,
