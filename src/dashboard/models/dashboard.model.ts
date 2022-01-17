@@ -12,4 +12,6 @@ export interface DashboardModel {
   team: Array<MemberModel>;
   private: boolean;
   inactive: boolean;
+  color: string;
+  bg_color: string;
 }

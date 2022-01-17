@@ -41,4 +41,14 @@ export class AddDashboardDTO {
   @IsDefined()
   @IsBoolean()
   inactive: boolean;
+
+  @ApiProperty({ required: true })
+  @IsString()
+  @IsDefined()
+  color: string;
+
+  @ApiProperty({ required: true })
+  @IsString()
+  @IsDefined()
+  bg_color: string;
 }

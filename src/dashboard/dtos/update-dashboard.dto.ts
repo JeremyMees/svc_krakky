@@ -36,4 +36,14 @@ export class UpdateDashboardDTO {
   @IsOptional()
   @IsBoolean()
   inactive: boolean;
+
+  @ApiProperty({ required: false })
+  @IsString()
+  @IsOptional()
+  color: string;
+
+  @ApiProperty({ required: false })
+  @IsString()
+  @IsOptional()
+  bg_color: string;
 }

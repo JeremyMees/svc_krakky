@@ -32,6 +32,12 @@ export class Dashboard {
 
   @Prop({ required: true })
   inactive: boolean;
+
+  @Prop({ required: true })
+  color: string;
+
+  @Prop({ required: true })
+  bg_color: string;
 }
 
 export const DashboardSchema = SchemaFactory.createForClass(Dashboard);
