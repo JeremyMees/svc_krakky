@@ -11,6 +11,7 @@ import { RoutingModule } from './routing.module';
 import { GatewaysModule } from './gateways/gateways.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guards/jwt.guard';
+import { TetrisModule } from './tetris/tetris.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, cache: true }),
