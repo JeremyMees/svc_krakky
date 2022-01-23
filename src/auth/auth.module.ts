@@ -6,16 +6,21 @@ import { LocalStrategy } from './guards/strategys/local.strategy';
 import { AuthController } from './auth.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './guards/strategys/jwt.strategy';
-import { jwtConstants } from './constants';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
-const expireTime: number = 216000; //6houres
 @Module({
   imports: [
     UserModule,
-    PassportModule,
-    JwtModule.register({
-      secret: jwtConstants.secret,
-      signOptions: { expiresIn: `${expireTime}s` },
+    PassportModule.register({ defaultStrategy: 'jwt' }),
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (config: ConfigService) => {
+        return {
+          secret: config.get('JWT_CONSTANT'),
+          signOptions: { expiresIn: `${config.get('JWT_EXPIRE_TIME')}s` },
+        };
+      },
     }),
   ],
   providers: [AuthService, LocalStrategy, JwtStrategy],

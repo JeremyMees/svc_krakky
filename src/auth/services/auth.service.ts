@@ -62,14 +62,12 @@ export class AuthService {
   }
 
   async login(credentials: CredentialsModel): Promise<HttpResponse> {
-    const password: string = credentials.password;
     return this.userService
       .getUser(credentials)
       .then((response: HttpResponse) => {
         if (response.data) {
-          credentials.password = response.data.password;
           return bcrypt
-            .compare(password, response.data.password)
+            .compare(credentials.password, response.data.password)
             .then((res: boolean) => {
               if (res) {
                 const data = JSON.parse(JSON.stringify(response.data));
