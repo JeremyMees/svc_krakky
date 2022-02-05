@@ -42,8 +42,7 @@ export class TetrisService {
           data: scores,
         };
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
         return { message: 'Error fetching highscore', statusCode: 400 };
       });
   }

@@ -1,4 +1,5 @@
 import { CommentModel } from './comment.model';
+import { TagModel } from '../../tag/models/tag.model';
 
 export interface CardModel {
   board_id: string;
@@ -16,6 +17,7 @@ export interface CardModel {
   color: string;
   priority?: string;
   assignees?: Array<string>;
+  tags?: Array<TagModel>;
   _id?: string;
   __v?: number;
 }

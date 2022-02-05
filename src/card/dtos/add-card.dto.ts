@@ -6,12 +6,13 @@ import {
   IsOptional,
   IsString,
   Length,
+  ValidateNested,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Colors } from '../../shared/enums/color.enum';
 import { CommentDTO } from './comment.dto';
 import { Type } from 'class-transformer';
-import { Priority } from 'src/shared/enums/priority.enum';
+import { TagDTO } from '../../tag/dtos/tag.dto';
 export class AddCardDTO {
   @ApiProperty({ required: true })
   @IsString()
@@ -44,11 +45,6 @@ export class AddCardDTO {
   @IsOptional()
   color: string;
 
-  @ApiProperty({ required: false, enum: Priority })
-  @IsEnum(Priority)
-  @IsOptional()
-  priority: string;
-
   @ApiProperty({ required: false })
   @IsString()
   @IsOptional()
@@ -72,6 +68,14 @@ export class AddCardDTO {
   @ApiProperty({ required: false })
   @IsOptional()
   @IsArray()
+  @ValidateNested({ each: true })
   @Type(() => CommentDTO)
   comments: Array<CommentDTO>;
+
+  @ApiProperty({ required: false, default: [] })
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => TagDTO)
+  tags: Array<TagDTO>;
 }

@@ -1,3 +1,4 @@
+import { Tag } from 'src/tag/schema/tag.schema';
 import { MemberModel } from 'src/workspace/models/member.model';
 import { CardModel } from '../../card/models/card.model';
 import { ListModel } from '../../list/models/list.model';
@@ -18,4 +19,5 @@ export interface AggregateDashboardModel {
   inactive: boolean;
   color: string;
   bg_color: string;
+  recent_tags?: Array<Tag>;
 }

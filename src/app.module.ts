@@ -12,6 +12,7 @@ import { GatewaysModule } from './gateways/gateways.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guards/jwt.guard';
 import { TetrisModule } from './tetris/tetris.module';
+import { TagModule } from './tag/tag.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, cache: true }),
@@ -53,6 +54,7 @@ import { TetrisModule } from './tetris/tetris.module';
     }),
     RoutingModule,
     GatewaysModule,
+    TagModule,
   ],
   providers: [
     MailService,

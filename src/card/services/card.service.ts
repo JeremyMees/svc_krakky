@@ -13,6 +13,7 @@ import { UpdateCardDTO } from '../dtos/update-card.dto';
 import { AssigneeModel } from '../models/assignee.model';
 import { UserService } from 'src/users/services/user.service';
 import { GetAssigneesDTO } from '../dtos/assignees.dto';
+import { DashboardService } from 'src/dashboard/services/dashboard.service';
 @Injectable()
 export class CardService {
   mongoKeys = MONGO_KEYS;
@@ -48,8 +49,7 @@ export class CardService {
             data: cards,
           };
         })
-        .catch((err) => {
-          console.log(err);
+        .catch(() => {
           return {
             statusCode: 400,
             message: 'Error while fetching cards',
@@ -74,8 +74,7 @@ export class CardService {
             data: cards,
           };
         })
-        .catch((err) => {
-          console.log(err);
+        .catch(() => {
           return {
             statusCode: 400,
             message: 'Error while fetching cards',

@@ -1,3 +1,4 @@
+import { Tag } from 'src/tag/schema/tag.schema';
 import { MemberModel } from 'src/workspace/models/member.model';
 
 export interface DashboardModel {
@@ -14,4 +15,5 @@ export interface DashboardModel {
   inactive: boolean;
   color: string;
   bg_color: string;
+  recent_tags?: Array<Tag>;
 }

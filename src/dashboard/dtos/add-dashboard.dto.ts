@@ -5,10 +5,12 @@ import {
   IsOptional,
   IsString,
   Length,
+  ValidateNested,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { MemberDTO } from 'src/workspace/dtos/member.dto';
+import { TagDTO } from 'src/tag/dtos/tag.dto';
 export class AddDashboardDTO {
   @ApiProperty({ required: true })
   @IsString()
@@ -29,6 +31,7 @@ export class AddDashboardDTO {
   @ApiProperty({ required: false, default: [], isArray: true })
   @IsOptional()
   @IsArray()
+  @ValidateNested({ each: true })
   @Type(() => MemberDTO)
   team: Array<MemberDTO>;
 
@@ -51,4 +54,11 @@ export class AddDashboardDTO {
   @IsString()
   @IsDefined()
   bg_color: string;
+
+  @ApiProperty({ required: false, default: [] })
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => TagDTO)
+  recent_tags: Array<TagDTO>;
 }

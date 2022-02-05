@@ -17,6 +17,8 @@ import { DeleteListDTO } from 'src/list/dtos/delete-list.dto';
 import { UpdateListDTO } from 'src/list/dtos/update-list.dto';
 import { ListService } from 'src/list/services/list.service';
 import { HttpResponse } from 'src/shared/models/http-response.model';
+import { AddTagDTO } from 'src/tag/dtos/add-tag.dto';
+import { TagService } from 'src/tag/services/tag/tag.service';
 import { GetOrDeleteDashboardDTO } from '../../dashboard/dtos/get.dashboard.dto';
 
 @WebSocketGateway(80, {
@@ -39,6 +41,8 @@ export class DashboardGateway {
     private cardService: CardService,
     @Inject(forwardRef(() => ListService))
     private listService: ListService,
+    @Inject(forwardRef(() => TagService))
+    private tagService: TagService,
   ) {}
 
   @SubscribeMessage('get-dashboard')
@@ -133,6 +137,26 @@ export class DashboardGateway {
 
   @SubscribeMessage('delete-card')
   async deleteCard(@MessageBody() data: DeleteCardDTO): Promise<void> {
+    const id: string = data.board_id;
+    this.cardService.deleteCard(data).then(async (response: HttpResponse) => {
+      const dashboard = await this.getAggregatedDashboard({ board_id: id });
+      response.statusCode === 200 ? (response.data = dashboard.data) : null;
+      this.server.emit(id, response);
+    });
+  }
+
+  @SubscribeMessage('add-tag')
+  async addTag(@MessageBody() data: AddTagDTO): Promise<void> {
+    const id: string = data.board_id;
+    this.tagService.addTag(data).then(async (response: HttpResponse) => {
+      const dashboard = await this.getAggregatedDashboard({ board_id: id });
+      response.statusCode === 200 ? (response.data = dashboard.data) : null;
+      this.server.emit(id, response);
+    });
+  }
+
+  @SubscribeMessage('delete-tag')
+  async deleteTag(@MessageBody() data: DeleteCardDTO): Promise<void> {
     const id: string = data.board_id;
     this.cardService.deleteCard(data).then(async (response: HttpResponse) => {
       const dashboard = await this.getAggregatedDashboard({ board_id: id });

@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
+import { Tag } from 'src/tag/schema/tag.schema';
 import { Member } from 'src/workspace/schemas/member.schema';
 
 export type DashboardDocument = Dashboard & Document;
@@ -38,6 +39,9 @@ export class Dashboard {
 
   @Prop({ required: true })
   bg_color: string;
+
+  @Prop({ required: false })
+  recent_tags: Array<Tag>;
 }
 
 export const DashboardSchema = SchemaFactory.createForClass(Dashboard);

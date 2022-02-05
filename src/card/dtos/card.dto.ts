@@ -6,10 +6,12 @@ import {
   IsOptional,
   IsString,
   Length,
+  ValidateNested,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { CommentDTO } from './comment.dto';
+import { TagDTO } from '../../tag/dtos/tag.dto';
 export class CardDTO {
   @ApiProperty({ required: true })
   @IsString()
@@ -80,6 +82,14 @@ export class CardDTO {
   @ApiProperty({ required: false })
   @IsOptional()
   @IsArray()
+  @ValidateNested({ each: true })
   @Type(() => CommentDTO)
   comments: Array<CommentDTO>;
+
+  @ApiProperty({ required: false, default: [] })
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => TagDTO)
+  tags: Array<TagDTO>;
 }

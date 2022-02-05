@@ -1,4 +1,4 @@
-import { IsArray, IsDefined, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsDefined, IsString, ValidateNested } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { MemberDTO } from './member.dto';
@@ -11,6 +11,8 @@ export class UpdateMemberDTO {
 
   @ApiProperty({ required: true, default: [], isArray: true })
   @IsArray()
+  @IsDefined()
+  @ValidateNested({ each: true })
   @Type(() => MemberDTO)
   team: Array<MemberDTO>;
 }

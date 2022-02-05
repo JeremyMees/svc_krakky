@@ -4,6 +4,7 @@ import {
   IsOptional,
   IsString,
   Length,
+  ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { MemberDTO } from './member.dto';
@@ -33,6 +34,7 @@ export class WorkspaceDTO {
   @ApiProperty({ required: false, default: [], isArray: true })
   @IsOptional()
   @IsArray()
+  @ValidateNested({ each: true })
   @Type(() => MemberDTO)
   team: Array<MemberDTO>;
 }
