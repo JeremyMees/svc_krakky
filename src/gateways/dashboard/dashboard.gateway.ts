@@ -28,7 +28,9 @@ import { GetOrDeleteDashboardDTO } from '../../dashboard/dtos/get.dashboard.dto'
   },
   reconnection: true,
   reconnectionDelay: 500,
+  reconnectionMaxDelay: 5000,
   reconnectionAttempts: 10,
+  autoConnect: false,
 })
 export class DashboardGateway {
   @WebSocketServer()
