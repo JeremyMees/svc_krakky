@@ -20,7 +20,7 @@ export class TetrisService {
       .limit(10)
       .then((scores: Array<ScoreModel>) => {
         return {
-          message: 'Fetched highscores succesfully',
+          message: 'Fetched highscores successfully',
           statusCode: 200,
           data: scores,
         };
@@ -37,7 +37,7 @@ export class TetrisService {
       .limit(1)
       .then((scores: Array<ScoreModel>) => {
         return {
-          message: 'Fetched highscore succesfully',
+          message: 'Fetched highscore successfully',
           statusCode: 200,
           data: scores,
         };
@@ -54,7 +54,7 @@ export class TetrisService {
       .then(() => {
         return {
           statusCode: 201,
-          message: 'Highscore created succesfully',
+          message: 'Highscore created successfully',
           data: score,
         };
       })

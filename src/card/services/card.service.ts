@@ -45,7 +45,7 @@ export class CardService {
         .then((cards: Array<CardModel>) => {
           return {
             statusCode: 200,
-            message: 'Fetched cards succesfully',
+            message: 'Fetched cards successfully',
             data: cards,
           };
         })
@@ -70,7 +70,7 @@ export class CardService {
         .then((cards: Array<CardModel>) => {
           return {
             statusCode: 200,
-            message: 'Fetched cards succesfully',
+            message: 'Fetched cards successfully',
             data: cards,
           };
         })
@@ -114,7 +114,7 @@ export class CardService {
             .then(() => {
               return {
                 statusCode: 201,
-                message: 'Card created succesfully',
+                message: 'Card created successfully',
                 data: card,
               };
             })
@@ -150,7 +150,7 @@ export class CardService {
       .then(() => {
         return {
           statusCode: 200,
-          message: 'Updated card succesfully',
+          message: 'Updated card successfully',
         };
       })
       .catch(() => {
@@ -164,7 +164,7 @@ export class CardService {
       return await this.card
         .deleteOne(params)
         .then(() => {
-          return { statusCode: 200, message: 'Deleted card succesfully' };
+          return { statusCode: 200, message: 'Deleted card successfully' };
         })
         .catch(() => {
           return {
@@ -186,7 +186,7 @@ export class CardService {
       .then(() => {
         return {
           statusCode: 200,
-          message: 'Deleted list and coherent cards succesfully',
+          message: 'Deleted list and coherent cards successfully',
         };
       })
       .catch(() => {
@@ -221,7 +221,7 @@ export class CardService {
     );
     return {
       statusCode: 200,
-      message: `Assignees fetched succesfullly`,
+      message: `Assignees fetched successfullly`,
       data: assignees,
     };
   }

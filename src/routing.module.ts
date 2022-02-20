@@ -7,6 +7,8 @@ import { TagModule } from './tag/tag.module';
 import { TetrisModule } from './tetris/tetris.module';
 import { UserModule } from './users/users.module';
 import { WorkspaceModule } from './workspace/workspace.module';
+import { GatewaysModule } from './gateways/gateways.module';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -18,6 +20,8 @@ import { WorkspaceModule } from './workspace/workspace.module';
     CardModule,
     TetrisModule,
     TagModule,
+    GatewaysModule,
+    MailModule,
   ],
 })
 export class RoutingModule {}

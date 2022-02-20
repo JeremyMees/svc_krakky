@@ -25,7 +25,7 @@ export class TagService {
       return {
         statusCode: 200,
         data: new_tag,
-        message: 'Tag succesfully added',
+        message: 'Tag successfully added',
       };
     } else {
       return {

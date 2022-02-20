@@ -12,7 +12,6 @@ import { HttpResponse } from 'src/shared/models/http-response.model';
 import { EmailDTO } from './dtos/email.dto';
 import { ResetPasswordDTO } from './dtos/reset-password.dto';
 import { UserDTO } from './dtos/user.dto';
-import { UsernameDTO } from './dtos/username.dto';
 import { UserService } from './services/user.service';
 import { ApiTags } from '@nestjs/swagger';
 import { Public } from 'src/shared/decorator/skip-auth.decorator';
@@ -23,16 +22,6 @@ import { UpdateUserDTO } from './dtos/update-user.dto';
 @Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}
-
-  @Public()
-  @Get('')
-  async getUser(
-    @Query('id') id?: string,
-    @Query('username') username?: string,
-    @Query('email') email?: string,
-  ): Promise<HttpResponse> {
-    return await this.userService.getUser({ id, username, email });
-  }
 
   @Public()
   @Get('verify/:id')

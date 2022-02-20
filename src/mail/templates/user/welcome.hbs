@@ -1,34 +1,43 @@
-<div style='background:#fff; color:#000; padding:1rem; border-radius:5px'>
-  <b>Hi
-    <span style='color:#673ab7'>{{username}}</span>,</b>
-  <br />
-  <img
-    src='http://localhost:3000/public/welcome.svg'
-    alt='welcome image'
-    style='width: 50%; display:block; margin: 0 auto; position:relative; top: 1rem'
-  />
-  <br />
-  <br />
-  Welcome to Krakky!
-  <br />
-  We are so glad you have chosen us to help you keep track of your
-  project/buisness.
-  <br />
-  At Krakky we only stand for one thing and that is to make your life easier and
-  not only yours but for everyone in your company.
-  <br />
-  The only thing you have to do now is confirming your email address by clicking
-  <a href='{{urlVerify}}'>here</a>
-  <br />
-  <br />
-  Click
-  <a href='{{urlDelete}}'>here</a>
-  if you didn't join Krakky.
-  <br />
-  <br />
-  Excited to have you aboard! Thanks!
-  <br />
-  <br />
-  <span style='color:#673ab7'>Krakky</span>
-  Team
+<head>
+  <style>
+    a{ color: #0d89ec } a:hover{ color: #57a4e4}
+  </style>
+</head>
+<div
+  style='background:rgb(255, 255, 255); color:#333; padding:1rem; border-radius:5px; width: 100%'
+>
+  <div style='width:100%; max-width:550px; display: block; margin: 0 auto'>
+    <b>Hi
+      <span style='color:#0d89ec'>{{username}}</span>,</b>
+    <img
+      src='http://localhost:3000/public/welcome.svg'
+      alt='welcome image'
+      style='width: 50%;max-width:250px; display:block; margin: 0.5rem auto; position:relative; top: 1rem'
+    />
+    Welcome to
+    <span style='color:#0d89ec'>Krakky</span>!
+    <br />
+    <br />
+    We are so glad you have chosen us to help you keep track of your
+    project/buisness.
+    <br />
+    At Krakky we only stand for one thing and that is to make your life easier
+    and not only yours but for everyone in your company.
+    <br />
+    The only thing you have to do now is confirming your email address by
+    clicking
+    <a href='{{urlVerify}}'>here</a>
+    <br />
+    <br />
+    Click
+    <a href='{{urlDelete}}'>here</a>
+    if you didn't join Krakky.
+    <br />
+    <br />
+    Excited to have you aboard! Thanks!
+    <br />
+    <br />
+    <span style='color:#0d89ec'>Krakky</span>
+    Team
+  </div>
 </div>

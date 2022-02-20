@@ -126,7 +126,7 @@ export class DashboardService {
                   .then(() => {
                     return {
                       statusCode: 201,
-                      message: 'Dashboard created succesfully',
+                      message: 'Dashboard created successfully',
                       data: dashboard,
                     };
                   })
@@ -175,7 +175,7 @@ export class DashboardService {
       .then(() => {
         return {
           statusCode: 200,
-          message: 'Updated dashboard succesfully',
+          message: 'Updated dashboard successfully',
         };
       })
       .catch(() => {
@@ -217,7 +217,7 @@ export class DashboardService {
           return {
             statusCode: 200,
             message:
-              'Deleted workspace and coherent dashboards, lists and cards succesfully',
+              'Deleted workspace and coherent dashboards, lists and cards successfully',
           };
         } else {
           return {
@@ -288,7 +288,7 @@ export class DashboardService {
         if (res.modifiedCount > 0) {
           return {
             statusCode: 200,
-            message: 'Dashboard updated succesfully',
+            message: 'Dashboard updated successfully',
             data: members.team,
           };
         } else {
@@ -321,7 +321,7 @@ export class DashboardService {
                 .then(() => {
                   return {
                     statusCode: 200,
-                    message: `Deleted dashboard member succesfully`,
+                    message: `Deleted dashboard member successfully`,
                     data: dashboard.data[0],
                   };
                 })

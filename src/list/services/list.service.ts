@@ -58,7 +58,7 @@ export class ListService {
               .then(() => {
                 return {
                   statusCode: 201,
-                  message: 'List created succesfully',
+                  message: 'List created successfully',
                   data: {
                     board_id: list.board_id,
                     title: list.title,
@@ -96,7 +96,7 @@ export class ListService {
       .then(() => {
         return {
           statusCode: 200,
-          message: 'Updated list succesfully',
+          message: 'Updated list successfully',
         };
       })
       .catch(() => {
@@ -130,7 +130,7 @@ export class ListService {
           return {
             statusCode: 200,
             message:
-              'Deleted dashboard and coherent lists and cards succesfully',
+              'Deleted dashboard and coherent lists and cards successfully',
           };
         });
       })

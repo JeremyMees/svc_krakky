@@ -1,7 +1,7 @@
 import { HttpModule } from '@nestjs/axios';
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { MailService } from 'src/mail/mail.service';
+import { MailModule } from 'src/mail/mail.module';
 import {
   ResetPassword,
   ResetPasswordSchema,
@@ -11,10 +11,11 @@ import { UserService } from './services/user.service';
 import { UserController } from './user.controller';
 
 @Module({
-  providers: [UserService, MailService],
+  providers: [UserService],
   exports: [UserService],
   controllers: [UserController],
   imports: [
+    forwardRef(() => MailModule),
     HttpModule,
     MongooseModule.forFeature([
       { name: User.name, schema: UserSchema },

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User, UserDocument } from '../schemas/user.schema';
@@ -22,6 +22,7 @@ import { UpdateUserImgDTO } from '../dtos/update-user-img.dto';
 import { AssigneeModel } from 'src/card/models/assignee.model';
 import { UpdateUserSettingsDTO } from '../dtos/update-settings.dto';
 import { UpdateUserDTO } from '../dtos/update-user.dto';
+import { MongoExclude } from 'src/shared/models/mongo-exclude.model';
 
 @Injectable()
 export class UserService {
@@ -34,20 +35,24 @@ export class UserService {
     @InjectModel(ResetPassword.name)
     private reset_password: Model<ResetPasswordDocument>,
     private configService: ConfigService,
+    @Inject(forwardRef(() => MailService))
     private mailService: MailService,
   ) {}
 
-  async getUser(queryparams: QueryparamsUser): Promise<HttpResponse> {
+  async getUser(
+    queryparams: QueryparamsUser,
+    exclude?: MongoExclude,
+  ): Promise<HttpResponse> {
     const params = await this.queryBuilder(queryparams);
     if (Object.entries(params).length > 0) {
       return this.users
-        .findOne(params)
+        .findOne(params, exclude)
         .exec()
         .then((user: UserModel) => {
           if (user) {
             return {
               statusCode: 200,
-              message: `Fetched user succesfully`,
+              message: `Fetched user successfully`,
               data: user,
             };
           } else {
@@ -85,10 +90,14 @@ export class UserService {
       return newUser
         .save()
         .then((user: UserModel) => {
-          // this.mailService.welcome(user.username, user.email, user._id);
+          this.mailService.sendWelcomeMail({
+            username: user.username,
+            email: user.email,
+            id: user._id,
+          });
           return {
             statusCode: 201,
-            message: `Created user ${user._id} succesfully`,
+            message: `Created user ${user._id} successfully`,
             data: {
               username: user.username,
               email: user.email,
@@ -133,7 +142,7 @@ export class UserService {
                   .then(() => {
                     return {
                       statusCode: 200,
-                      message: `Updated user ${updated_user._id} succesfully`,
+                      message: `Updated user ${updated_user._id} successfully`,
                       data: {
                         username: updated_user.username
                           ? updated_user.username
@@ -188,7 +197,7 @@ export class UserService {
                 delete updated_user.password;
                 return {
                   statusCode: 200,
-                  message: `Updated user ${updated_user._id} succesfully`,
+                  message: `Updated user ${updated_user._id} successfully`,
                   data: updated_user,
                 };
               })
@@ -220,7 +229,7 @@ export class UserService {
       .then(() => {
         return {
           statusCode: 200,
-          message: `Updated user ${user._id} succesfully`,
+          message: `Updated user ${user._id} successfully`,
           data: {
             _id: user._id,
             img: user.img,
@@ -246,7 +255,7 @@ export class UserService {
           if (res.deletedCount > 0) {
             return {
               statusCode: 200,
-              message: `Deleted user succesfully`,
+              message: `Deleted user successfully`,
             };
           } else {
             return { statusCode: 400, message: `Error couldn't find user` };
@@ -273,7 +282,7 @@ export class UserService {
       .then(() => {
         return {
           statusCode: 200,
-          message: `Verified user ${param.id} succesfully`,
+          message: `Verified user ${param.id} successfully`,
           data: {
             _id: param.id,
             verified: true,
@@ -351,7 +360,7 @@ export class UserService {
             .then((resetObj: ResetPasswordTokenModel) => {
               return {
                 statusCode: 201,
-                message: `Created reset password succesfully`,
+                message: `Created reset password successfully`,
                 data: {
                   user_id: resetObj.user_id,
                   token: resetObj.token,
@@ -459,7 +468,7 @@ export class UserService {
     });
     return {
       statusCode: 200,
-      message: `Members fetched succesfullly`,
+      message: `Members fetched successfullly`,
       data: teamMembers,
     };
   }

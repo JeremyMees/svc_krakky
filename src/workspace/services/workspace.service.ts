@@ -23,6 +23,7 @@ import { DashboardService } from 'src/dashboard/services/dashboard.service';
 import { UpdateMemberDTO } from '../dtos/update-member.dto';
 import { UserService } from 'src/users/services/user.service';
 import { IfMemberDTO } from '../dtos/if-member.dto';
+import { MailService } from 'src/mail/mail.service';
 
 @Injectable()
 export class WorkspaceService {
@@ -39,6 +40,8 @@ export class WorkspaceService {
     private dashboardService: DashboardService,
     @Inject(forwardRef(() => UserService))
     private userService: UserService,
+    @Inject(forwardRef(() => MailService))
+    private mailService: MailService,
   ) {}
 
   async getWorkspaces(
@@ -127,7 +130,7 @@ export class WorkspaceService {
       .then(() => {
         return {
           statusCode: 201,
-          message: 'Workspace created succesfully',
+          message: 'Workspace created successfully',
           data: workspace,
         };
       })
@@ -148,7 +151,7 @@ export class WorkspaceService {
         if (res.modifiedCount > 0) {
           return {
             statusCode: 200,
-            message: 'Workspace updated succesfully',
+            message: 'Workspace updated successfully',
             data: updatedWorkspace,
           };
         } else {
@@ -224,7 +227,7 @@ export class WorkspaceService {
           .then(() => {
             return {
               statusCode: 201,
-              message: `Created join workspace token succesfully`,
+              message: `Created join workspace token successfully`,
               data: tokenObj,
             };
           })
@@ -350,7 +353,7 @@ export class WorkspaceService {
         if (res.modifiedCount > 0) {
           return {
             statusCode: 200,
-            message: 'Workspace updated succesfully',
+            message: 'Workspace updated successfully',
             data: members.team,
           };
         } else {
@@ -383,7 +386,7 @@ export class WorkspaceService {
                 .then(() => {
                   return {
                     statusCode: 200,
-                    message: `Deleted workspace member succesfully`,
+                    message: `Deleted workspace member successfully`,
                     data: workspace.data[0],
                   };
                 })
