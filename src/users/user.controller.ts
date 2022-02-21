@@ -6,7 +6,6 @@ import {
   Param,
   Patch,
   Post,
-  Query,
 } from '@nestjs/common';
 import { HttpResponse } from 'src/shared/models/http-response.model';
 import { EmailDTO } from './dtos/email.dto';
@@ -67,12 +66,8 @@ export class UserController {
   }
 
   @Public()
-  @Delete('')
-  async deleteUser(
-    @Query('id') id?: string,
-    @Query('username') username?: string,
-    @Query('email') email?: string,
-  ): Promise<HttpResponse> {
-    return await this.userService.deleteUser({ id, username, email });
+  @Delete('/:_id')
+  async deleteUser(@Param() param: { _id: string }): Promise<HttpResponse> {
+    return await this.userService.deleteUser(param);
   }
 }

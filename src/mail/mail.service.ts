@@ -8,30 +8,25 @@ export class MailService {
   constructor(private mailer: MailerService) {}
 
   async sendWelcomeMail(mail: WelcomeMailDTO): Promise<HttpResponse> {
-    // pagina maken in de front end waar de urlverify en urlDelete word aan geroepen
-    //in plaats van rechtstreeks zodat ze iets visueel zien
-    //en niet rechtstreeks verbinden met de databse
     return this.mailer
       .sendMail({
         to: mail.email,
         from: '"<Krakky>"info@krakky.com',
         subject: 'Welcome to Krakky',
-        template: './user/welcome',
+        template: './welcome',
         context: {
           username: mail.username,
-          urlVerify: `http://localhost:3000/users/verify/${mail.id}`,
-          urlDelete: `http://localhost:3000/users?id=${mail.id}`,
+          urlVerify: `http://localhost:4200/users/verify/${mail.id}`,
+          urlDelete: `http://localhost:4200/users/delete/${mail.id}`,
         },
       })
-      .then((res) => {
-        console.log(res);
+      .then(() => {
         return {
           statusCode: 200,
           message: 'Mail is successfully sent',
         };
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
         return {
           statusCode: 400,
           message: 'Error while sending email',

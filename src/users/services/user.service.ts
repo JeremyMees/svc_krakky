@@ -245,34 +245,26 @@ export class UserService {
       });
   }
 
-  async deleteUser(queryparams: QueryparamsUser): Promise<HttpResponse> {
-    const params = await this.queryBuilder(queryparams);
-    if (Object.entries(params).length > 0) {
-      return this.users
-        .deleteOne(params)
-        .exec()
-        .then((res) => {
-          if (res.deletedCount > 0) {
-            return {
-              statusCode: 200,
-              message: `Deleted user successfully`,
-            };
-          } else {
-            return { statusCode: 400, message: `Error couldn't find user` };
-          }
-        })
-        .catch(() => {
+  async deleteUser(params: { _id: string }): Promise<HttpResponse> {
+    return this.users
+      .deleteOne(params)
+      .exec()
+      .then((res) => {
+        if (res.deletedCount > 0) {
           return {
-            statusCode: 400,
-            message: `Error while trying to delete user`,
+            statusCode: 200,
+            message: `Deleted user successfully`,
           };
-        });
-    } else {
-      return {
-        statusCode: 400,
-        message: `Error query params weren't provided`,
-      };
-    }
+        } else {
+          return { statusCode: 400, message: `Error couldn't find user` };
+        }
+      })
+      .catch(() => {
+        return {
+          statusCode: 400,
+          message: `Error while trying to delete user`,
+        };
+      });
   }
 
   async verifyUser(param: { id: string }): Promise<HttpResponse> {
