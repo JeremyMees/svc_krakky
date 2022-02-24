@@ -14,7 +14,6 @@ import { UserModel } from 'src/users/models/user.model';
 export class AuthService {
   salt: number = Number(this.configService.get('SALT_ROUNDS'));
   constructor(
-    private userService: UserService,
     private jwtService: JwtService,
     private configService: ConfigService,
     @InjectModel(User.name)

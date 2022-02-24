@@ -23,5 +23,6 @@ import { MailModule } from './mail/mail.module';
     GatewaysModule,
     MailModule,
   ],
+  exports: [UserModule],
 })
 export class RoutingModule {}

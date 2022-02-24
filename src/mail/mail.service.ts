@@ -1,11 +1,19 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
 import { WelcomeMailDTO } from './dtos/welcome-mail.dto';
 import { HttpResponse } from 'src/shared/models/http-response.model';
+import { GoodbyeMailDTO } from './dtos/goodbye-mail.dto';
+import { UserService } from 'src/users/services/user.service';
+import { WorkspaceJoinMailDTO } from './dtos/workspace-join-mail.dto';
+import { UserModel } from 'src/users/models/user.model';
 
 @Injectable()
 export class MailService {
-  constructor(private mailer: MailerService) {}
+  constructor(
+    private mailer: MailerService,
+    @Inject(forwardRef(() => UserService))
+    private userService: UserService,
+  ) {}
 
   async sendWelcomeMail(mail: WelcomeMailDTO): Promise<HttpResponse> {
     return this.mailer
@@ -34,49 +42,105 @@ export class MailService {
       });
   }
 
-  goodbye(username: string, email: string, id: string): void {
-    this.mailer.sendMail({
-      to: email,
-      from: '"<Krakky>"info@krakky.com',
-      subject: 'Goodbye',
-      template: './user/goodbye',
-      context: {
-        username,
-        urlReverse: `http://localhost:3000/workspace/verify/${id}`,
-      },
-    });
+  async sendGoodbyeMail(mail: GoodbyeMailDTO): Promise<HttpResponse> {
+    return this.mailer
+      .sendMail({
+        to: mail.email,
+        from: '"<Krakky>"info@krakky.com',
+        subject: 'Goodbye',
+        template: './goodbye',
+        context: {
+          username: mail.username,
+        },
+      })
+      .then(() => {
+        return {
+          statusCode: 200,
+          message: 'Mail is successfully sent',
+        };
+      })
+      .catch(() => {
+        return {
+          statusCode: 400,
+          message: 'Error while sending email',
+        };
+      });
   }
 
-  addMemberToWorkspace(
-    username: string,
-    workspace: string,
-    email: string,
-    id: string,
-  ): void {
-    this.mailer.sendMail({
-      to: email,
-      from: '"<Krakky>"info@krakky.com',
-      subject: "You've been added to a workspace",
-      template: './workspace/added-member',
-      context: {
-        username,
-        workspace,
-        urlVerify: `http://localhost:3000/workspace/verify/${id}`,
-      },
-    });
+  async addMember(mail: {
+    token: string;
+    workspace_id: string;
+    email: string;
+  }): Promise<HttpResponse> {
+    mail.token = mail.token.split('/').join('_');
+    return await this.userService
+      .getUser({ email: mail.email })
+      .then((res: HttpResponse) => {
+        if (res.statusCode === 200) {
+          return this.addMemberToWorkspace(mail, res.data);
+        } else {
+          return this.addNonMemberToWorkspace(mail);
+        }
+      })
+      .catch(() => {
+        return this.addNonMemberToWorkspace(mail);
+      });
   }
 
-  addNonMemberToWorkspace(workspace: string, email: string, id: string): void {
-    this.mailer.sendMail({
-      to: email,
-      from: '"<Krakky>"info@krakky.com',
-      subject: "You've been added to a workspace",
-      template: './workspace/added-non-member',
-      context: {
-        workspace,
-        urlJoin: `http://localhost:3000/workspace/verify/${id}`,
-        urlVerify: `http://localhost:3000/workspace/verify/${id}`,
-      },
-    });
+  async addMemberToWorkspace(
+    mail: WorkspaceJoinMailDTO,
+    user: UserModel,
+  ): Promise<HttpResponse> {
+    return this.mailer
+      .sendMail({
+        to: mail.email,
+        from: '"<Krakky>"info@krakky.com',
+        subject: "You've been added to a workspace",
+        template: './added-member',
+        context: {
+          username: user.username,
+          urlVerify: `http://localhost:3000/workspace/join/${mail.workspace_id}/${mail.token}`,
+        },
+      })
+      .then(() => {
+        return {
+          statusCode: 200,
+          message: 'Mail is successfully sent',
+        };
+      })
+      .catch(() => {
+        return {
+          statusCode: 400,
+          message: 'Error while sending email',
+        };
+      });
+  }
+
+  async addNonMemberToWorkspace(
+    mail: WorkspaceJoinMailDTO,
+  ): Promise<HttpResponse> {
+    return this.mailer
+      .sendMail({
+        to: mail.email,
+        from: '"<Krakky>"info@krakky.com',
+        subject: "You've been added to a workspace",
+        template: './added-non-member',
+        context: {
+          urlJoin: `http://localhost:3000/home`,
+          urlVerify: `http://localhost:3000/workspace/join/${mail.workspace_id}/${mail.token}`,
+        },
+      })
+      .then(() => {
+        return {
+          statusCode: 200,
+          message: 'Mail is successfully sent',
+        };
+      })
+      .catch(() => {
+        return {
+          statusCode: 400,
+          message: 'Error while sending email',
+        };
+      });
   }
 }

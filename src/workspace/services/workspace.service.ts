@@ -215,7 +215,7 @@ export class WorkspaceService {
         const currentDatePlusThreeDays = Date.now() + 259200000;
         const newUser = await this.userService.getUser({ email: obj.email });
         const tokenObj: WorkspaceTokenModel = {
-          user_id: newUser.data ? newUser.data._id : undefined,
+          user_id: newUser.data ? newUser.data._id.toString() : undefined,
           email: obj.email,
           workspace_id: obj.workspace_id,
           token: hash,
@@ -224,7 +224,9 @@ export class WorkspaceService {
         const newJoinToken = new this.join_workspace(tokenObj);
         return newJoinToken
           .save()
-          .then(() => {
+          .then(async () => {
+            const { user_id, expire, ...mail } = tokenObj;
+            await this.mailService.addMember(mail);
             return {
               statusCode: 201,
               message: `Created join workspace token successfully`,

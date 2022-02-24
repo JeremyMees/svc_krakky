@@ -246,11 +246,18 @@ export class UserService {
   }
 
   async deleteUser(params: { _id: string }): Promise<HttpResponse> {
+    const user: HttpResponse = await this.getUser({ id: params._id });
     return this.users
       .deleteOne(params)
       .exec()
       .then((res) => {
         if (res.deletedCount > 0) {
+          if (user.statusCode === 200) {
+            this.mailService.sendGoodbyeMail({
+              username: user.data.username,
+              email: user.data.email,
+            });
+          }
           return {
             statusCode: 200,
             message: `Deleted user successfully`,

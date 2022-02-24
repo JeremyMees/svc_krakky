@@ -10,7 +10,6 @@ import { ThrottlerModule } from '@nestjs/throttler';
 import { RoutingModule } from './routing.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guards/jwt.guard';
-import { MailModule } from './mail/mail.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, cache: true }),
@@ -51,7 +50,6 @@ import { MailModule } from './mail/mail.module';
       inject: [ConfigService],
     }),
     RoutingModule,
-    MailModule,
   ],
   providers: [
     MailService,
