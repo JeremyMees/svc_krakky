@@ -12,12 +12,10 @@ import { EmailDTO } from './dtos/email.dto';
 import { ResetPasswordDTO } from './dtos/reset-password.dto';
 import { UserDTO } from './dtos/user.dto';
 import { UserService } from './services/user.service';
-import { ApiTags } from '@nestjs/swagger';
 import { Public } from 'src/shared/decorator/skip-auth.decorator';
 import { UpdateUserImgDTO } from './dtos/update-user-img.dto';
 import { UpdateUserSettingsDTO } from './dtos/update-settings.dto';
 import { UpdateUserDTO } from './dtos/update-user.dto';
-@ApiTags('Users')
 @Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}

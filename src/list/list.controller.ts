@@ -12,9 +12,7 @@ import { HttpResponse } from 'src/shared/models/http-response.model';
 import { AddListDTO } from './dtos/add-list.dto';
 import { QueryparamsListModel } from './models/queryparams-list.model';
 import { ListService } from './services/list.service';
-import { ApiTags } from '@nestjs/swagger';
 import { UpdateListDTO } from './dtos/update-list.dto';
-@ApiTags('Lists')
 @Controller('list')
 export class ListController {
   constructor(

@@ -15,13 +15,11 @@ import { JoinWorkspaceDTO } from './dtos/join-workspace.dto';
 import { WorkspaceDTO } from './dtos/workspace.dto';
 import { QueryparamsWorkspaceModel } from './models/queryparams.model';
 import { WorkspaceService } from './services/workspace.service';
-import { ApiTags } from '@nestjs/swagger';
 import { Public } from 'src/shared/decorator/skip-auth.decorator';
 import { UserService } from 'src/users/services/user.service';
 import { MemberDTO } from './dtos/member.dto';
 import { UpdateMemberDTO } from './dtos/update-member.dto';
 import { IfMemberDTO } from './dtos/if-member.dto';
-@ApiTags('Workspaces')
 @Controller('workspace')
 export class WorkspaceController {
   constructor(

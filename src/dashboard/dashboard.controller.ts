@@ -13,13 +13,11 @@ import { AddDashboardDTO } from './dtos/add-dashboard.dto';
 import { UpdateDashboardDTO } from './dtos/update-dashboard.dto';
 import { QueryparamsDashboardModel } from './models/queryparams-dashboard.model';
 import { DashboardService } from './services/dashboard.service';
-import { ApiTags } from '@nestjs/swagger';
 import { MemberDTO } from 'src/workspace/dtos/member.dto';
 import { UserService } from 'src/users/services/user.service';
 import { IfMemberDTO } from './dtos/if-member-dashboard.dto';
 import { UpdateMemberDTO } from './dtos/update-member-dashboard.dto';
 import { AddMemberDTO } from './dtos/add-member-dashboard.dto';
-@ApiTags('Dashboards')
 @Controller('dashboard')
 export class DashboardController {
   constructor(
@@ -42,7 +40,7 @@ export class DashboardController {
       title,
       createdby,
       workspace_id,
-      member
+      member,
     });
   }
 
