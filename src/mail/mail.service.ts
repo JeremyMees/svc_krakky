@@ -6,11 +6,15 @@ import { GoodbyeMailDTO } from './dtos/goodbye-mail.dto';
 import { UserService } from 'src/users/services/user.service';
 import { WorkspaceJoinMailDTO } from './dtos/workspace-join-mail.dto';
 import { UserModel } from 'src/users/models/user.model';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class MailService {
+  url: string = this.configService.get<string>('BASE_URL');
+
   constructor(
     private mailer: MailerService,
+    private configService: ConfigService,
     @Inject(forwardRef(() => UserService))
     private userService: UserService,
   ) {}
@@ -24,8 +28,8 @@ export class MailService {
         template: './welcome',
         context: {
           username: mail.username,
-          urlVerify: `http://localhost:4200/users/verify/${mail.id}`,
-          urlDelete: `http://localhost:4200/users/delete/${mail.id}`,
+          urlVerify: `${this.url}/users/verify/${mail.id}`,
+          urlDelete: `${this.url}/users/delete/${mail.id}`,
         },
       })
       .then(() => {
@@ -99,7 +103,7 @@ export class MailService {
         template: './added-member',
         context: {
           username: user.username,
-          urlVerify: `http://localhost:3000/workspace/join/${mail.workspace_id}/${mail.token}`,
+          urlVerify: `${this.url}/workspace/join/${mail.workspace_id}/${mail.token}`,
         },
       })
       .then(() => {
@@ -126,8 +130,8 @@ export class MailService {
         subject: "You've been added to a workspace",
         template: './added-non-member',
         context: {
-          urlJoin: `http://localhost:3000/home`,
-          urlVerify: `http://localhost:3000/workspace/join/${mail.workspace_id}/${mail.token}`,
+          urlJoin: `${this.url}/home`,
+          urlVerify: `${this.url}/workspace/join/${mail.workspace_id}/${mail.token}`,
         },
       })
       .then(() => {
