@@ -264,12 +264,14 @@ export class WorkspaceService {
                 Number(currentDate) < Number(expireDate) &&
                 joinObj.token === response.token
               ) {
+                this.deleteWorkspaceToken(joinObj.email, joinObj.workspace_id);
                 return this.addTeamMember({
                   workspace_id: joinObj.workspace_id,
                   user_id: response.user_id,
                   role: 'Member',
                 });
               } else {
+                this.deleteWorkspaceToken(joinObj.email, joinObj.workspace_id);
                 return {
                   statusCode: 404,
                   message: 'Error invalid or expired join workspace token',
@@ -297,6 +299,12 @@ export class WorkspaceService {
       });
   }
 
+  async deleteWorkspaceToken(email: string, workspace_id): Promise<void> {
+    await this.join_workspace
+      .deleteOne({ email: email, workspace_id: workspace_id })
+      .exec();
+  }
+
   async addTeamMember(addMember: AddMemberDTO): Promise<HttpResponse> {
     return await this.getWorkspaces({
       workspace_id: addMember.workspace_id,
@@ -307,7 +315,10 @@ export class WorkspaceService {
             _id: addMember.user_id,
             role: addMember.role,
           };
-          if (workspace.data[0].team.indexOf(member) === -1) {
+          const index: number = workspace.data[0].team.indexOf(
+            (member) => member._id === addMember.user_id,
+          );
+          if (index === -1) {
             workspace.data[0].team.push(member);
             return this.workspace
               .updateOne(
