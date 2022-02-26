@@ -40,6 +40,19 @@ export class AuthController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Get('logout')
+  async logout(
+    @Request() req: any,
+    @Response() res: any,
+  ): Promise<HttpResponse> {
+    res.clearCookie('krakkyAccessToken', req.user.data.access_token);
+    return res.send({
+      statusCode: 200,
+      message: 'User successfully logged out',
+    });
+  }
+
   @Public()
   @Post('token')
   async getToken(@Body() user: CredentialsDTO) {
