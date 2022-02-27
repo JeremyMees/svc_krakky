@@ -36,7 +36,7 @@ export class AuthController {
       delete req.user.data;
       return res.send(req.user);
     } else {
-      return { statusCode: 400, message: "Error couldn't log in" };
+      return res.send({ statusCode: 400, message: "Error couldn't log in" });
     }
   }
 
