@@ -24,9 +24,16 @@ export class MailService {
     return this.mailer
       .sendMail({
         to: mail.email,
-        from: '"<Krakky>"noreply@krakky.com',
+        from: 'noreply@krakky.com',
         subject: 'Welcome to Krakky',
         template: './welcome',
+        attachments: [
+          {
+            filename: 'welcome.svg',
+            path: __dirname + '/assets/welcome.svg',
+            cid: 'welcome',
+          },
+        ],
         context: {
           username: mail.username,
           urlVerify: `${this.url}/users/verify/${mail.id}`,
@@ -51,9 +58,16 @@ export class MailService {
     return this.mailer
       .sendMail({
         to: mail.email,
-        from: '"<Krakky>"noreply@krakky.com',
+        from: 'noreply@krakky.com',
         subject: 'Goodbye',
         template: './goodbye',
+        attachments: [
+          {
+            filename: 'goodbye.svg',
+            path: __dirname + '/assets/goodbye.svg',
+            cid: 'goodbye',
+          },
+        ],
         context: {
           username: mail.username,
         },
@@ -99,9 +113,16 @@ export class MailService {
     return this.mailer
       .sendMail({
         to: mail.email,
-        from: '"<Krakky>"noreply@krakky.com',
+        from: 'noreply@krakky.com',
         subject: "You've been added to a workspace",
         template: './added-member',
+        attachments: [
+          {
+            filename: 'add.svg',
+            path: __dirname + '/assets/add.svg',
+            cid: 'add',
+          },
+        ],
         context: {
           username: user.username,
           urlVerify: `${this.url}/workspace/join/${mail.workspace_id}/${mail.token}`,
@@ -127,9 +148,16 @@ export class MailService {
     return this.mailer
       .sendMail({
         to: mail.email,
-        from: '"<Krakky>"noreply@krakky.com',
+        from: 'noreply@krakky.com',
         subject: "You've been added to a workspace",
         template: './added-non-member',
+        attachments: [
+          {
+            filename: 'add.svg',
+            path: __dirname + '/assets/add.svg',
+            cid: 'add',
+          },
+        ],
         context: {
           urlJoin: `${this.url}/home`,
           urlVerify: `${this.url}/workspace/join/${mail.workspace_id}/${mail.token}`,
@@ -153,7 +181,7 @@ export class MailService {
     return this.mailer
       .sendMail({
         to: 'info@krakky.com',
-        from: `"<${mail.username}>"${mail.email}`,
+        from: `${mail.email}`,
         subject: `Contact krakky user ${mail.username}`,
         template: './contact',
         context: {
@@ -168,8 +196,7 @@ export class MailService {
           message: 'Mail is successfully sent',
         };
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
         return {
           statusCode: 400,
           message: 'Error while sending email',
