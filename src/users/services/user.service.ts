@@ -23,6 +23,10 @@ import { AssigneeModel } from 'src/card/models/assignee.model';
 import { UpdateUserSettingsDTO } from '../dtos/update-settings.dto';
 import { UpdateUserDTO } from '../dtos/update-user.dto';
 import { MongoExclude } from 'src/shared/models/mongo-exclude.model';
+import { DashboardService } from 'src/dashboard/services/dashboard.service';
+import { WorkspaceService } from 'src/workspace/services/workspace.service';
+import { WorkspaceModel } from 'src/workspace/models/workspace.model';
+import { DashboardModel } from 'src/dashboard/models/dashboard.model';
 
 @Injectable()
 export class UserService {
@@ -37,6 +41,10 @@ export class UserService {
     private configService: ConfigService,
     @Inject(forwardRef(() => MailService))
     private mailService: MailService,
+    @Inject(forwardRef(() => DashboardService))
+    private dashboardService: DashboardService,
+    @Inject(forwardRef(() => WorkspaceService))
+    private workspaceService: WorkspaceService,
   ) {}
 
   async getUser(
@@ -253,6 +261,7 @@ export class UserService {
       .then((res) => {
         if (res.deletedCount > 0) {
           if (user.statusCode === 200) {
+            this.deleteUserData(params._id);
             this.mailService.sendGoodbyeMail({
               username: user.data.username,
               email: user.data.email,
@@ -271,6 +280,30 @@ export class UserService {
           statusCode: 400,
           message: `Error while trying to delete user`,
         };
+      });
+  }
+
+  async deleteUserData(user_id: string): Promise<void> {
+    this.workspaceService
+      .getWorkspaces({ member: user_id })
+      .then(async (res: HttpResponse) => {
+        await this.asyncForEach(res.data, async (workspace: WorkspaceModel) => {
+          await this.workspaceService.deleteTeamMember({
+            user_id,
+            workspace_id: workspace._id,
+          });
+        });
+      });
+    this.dashboardService
+      .getDashboards({ member: user_id })
+      .then(async (res: HttpResponse) => {
+        console.log('dashboards', res.data.length);
+        await this.asyncForEach(res.data, async (dashboard: DashboardModel) => {
+          this.dashboardService.deleteTeamMember({
+            user_id,
+            board_id: dashboard._id,
+          });
+        });
       });
   }
 

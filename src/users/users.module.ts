@@ -1,7 +1,9 @@
 import { HttpModule } from '@nestjs/axios';
 import { forwardRef, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import { DashboardModule } from 'src/dashboard/dashboard.module';
 import { MailModule } from 'src/mail/mail.module';
+import { WorkspaceModule } from 'src/workspace/workspace.module';
 import {
   ResetPassword,
   ResetPasswordSchema,
@@ -16,6 +18,8 @@ import { UserController } from './user.controller';
   controllers: [UserController],
   imports: [
     forwardRef(() => MailModule),
+    forwardRef(() => WorkspaceModule),
+    forwardRef(() => DashboardModule),
     HttpModule,
     MongooseModule.forFeature([
       { name: User.name, schema: UserSchema },
