@@ -7,6 +7,7 @@ import { UserService } from 'src/users/services/user.service';
 import { WorkspaceJoinMailDTO } from './dtos/workspace-join-mail.dto';
 import { UserModel } from 'src/users/models/user.model';
 import { ConfigService } from '@nestjs/config';
+import { ContactMailDTO } from './dtos/contact-mail.dto';
 
 @Injectable()
 export class MailService {
@@ -23,7 +24,7 @@ export class MailService {
     return this.mailer
       .sendMail({
         to: mail.email,
-        from: '"<Krakky>"info@krakky.com',
+        from: '"<Krakky>"noreply@krakky.com',
         subject: 'Welcome to Krakky',
         template: './welcome',
         context: {
@@ -50,7 +51,7 @@ export class MailService {
     return this.mailer
       .sendMail({
         to: mail.email,
-        from: '"<Krakky>"info@krakky.com',
+        from: '"<Krakky>"noreply@krakky.com',
         subject: 'Goodbye',
         template: './goodbye',
         context: {
@@ -98,7 +99,7 @@ export class MailService {
     return this.mailer
       .sendMail({
         to: mail.email,
-        from: '"<Krakky>"info@krakky.com',
+        from: '"<Krakky>"noreply@krakky.com',
         subject: "You've been added to a workspace",
         template: './added-member',
         context: {
@@ -126,7 +127,7 @@ export class MailService {
     return this.mailer
       .sendMail({
         to: mail.email,
-        from: '"<Krakky>"info@krakky.com',
+        from: '"<Krakky>"noreply@krakky.com',
         subject: "You've been added to a workspace",
         template: './added-non-member',
         context: {
@@ -141,6 +142,34 @@ export class MailService {
         };
       })
       .catch(() => {
+        return {
+          statusCode: 400,
+          message: 'Error while sending email',
+        };
+      });
+  }
+
+  async sendContactMail(mail: ContactMailDTO): Promise<HttpResponse> {
+    return this.mailer
+      .sendMail({
+        to: 'info@krakky.com',
+        from: `"<${mail.username}>"${mail.email}`,
+        subject: `Contact krakky user ${mail.username}`,
+        template: './contact',
+        context: {
+          text: mail.text,
+          username: mail.username,
+          email: mail.email,
+        },
+      })
+      .then(() => {
+        return {
+          statusCode: 200,
+          message: 'Mail is successfully sent',
+        };
+      })
+      .catch((err) => {
+        console.log(err);
         return {
           statusCode: 400,
           message: 'Error while sending email',
