@@ -2,7 +2,7 @@ import { Body, Controller, Post } from '@nestjs/common';
 import { HttpResponse } from 'src/shared/models/http-response.model';
 import { ContactMailDTO } from './dtos/contact-mail.dto';
 import { WelcomeMailDTO } from './dtos/welcome-mail.dto';
-import { MailService } from './mail.service';
+import { MailService } from './services/mail.service';
 
 @Controller('mail')
 export class MailController {

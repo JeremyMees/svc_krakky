@@ -1,13 +1,13 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
-import { MailerService } from '@nestjs-modules/mailer';
-import { WelcomeMailDTO } from './dtos/welcome-mail.dto';
+import { ISendMailOptions, MailerService } from '@nestjs-modules/mailer';
+import { WelcomeMailDTO } from '../dtos/welcome-mail.dto';
 import { HttpResponse } from 'src/shared/models/http-response.model';
-import { GoodbyeMailDTO } from './dtos/goodbye-mail.dto';
+import { GoodbyeMailDTO } from '../dtos/goodbye-mail.dto';
 import { UserService } from 'src/users/services/user.service';
-import { WorkspaceJoinMailDTO } from './dtos/workspace-join-mail.dto';
+import { WorkspaceJoinMailDTO } from '../dtos/workspace-join-mail.dto';
 import { UserModel } from 'src/users/models/user.model';
 import { ConfigService } from '@nestjs/config';
-import { ContactMailDTO } from './dtos/contact-mail.dto';
+import { ContactMailDTO } from '../dtos/contact-mail.dto';
 
 @Injectable()
 export class MailService {
@@ -39,7 +39,7 @@ export class MailService {
           urlVerify: `${this.url}/users/verify/${mail.id}`,
           urlDelete: `${this.url}/users/delete/${mail.id}`,
         },
-      })
+      } as ISendMailOptions)
       .then(() => {
         return {
           statusCode: 200,
@@ -71,7 +71,7 @@ export class MailService {
         context: {
           username: mail.username,
         },
-      })
+      } as ISendMailOptions)
       .then(() => {
         return {
           statusCode: 200,
@@ -127,7 +127,7 @@ export class MailService {
           username: user.username,
           urlVerify: `${this.url}/workspace/join/${mail.workspace_id}/${mail.token}`,
         },
-      })
+      } as ISendMailOptions)
       .then(() => {
         return {
           statusCode: 200,
@@ -162,7 +162,7 @@ export class MailService {
           urlJoin: `${this.url}/home`,
           urlVerify: `${this.url}/workspace/join/${mail.workspace_id}/${mail.token}`,
         },
-      })
+      } as ISendMailOptions)
       .then(() => {
         return {
           statusCode: 200,
@@ -189,7 +189,7 @@ export class MailService {
           username: mail.username,
           email: mail.email,
         },
-      })
+      } as ISendMailOptions)
       .then(() => {
         return {
           statusCode: 200,

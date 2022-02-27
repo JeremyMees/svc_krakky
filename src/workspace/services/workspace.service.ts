@@ -23,7 +23,7 @@ import { DashboardService } from 'src/dashboard/services/dashboard.service';
 import { UpdateMemberDTO } from '../dtos/update-member.dto';
 import { UserService } from 'src/users/services/user.service';
 import { IfMemberDTO } from '../dtos/if-member.dto';
-import { MailService } from 'src/mail/mail.service';
+import { MailService } from 'src/mail/services/mail.service';
 
 @Injectable()
 export class WorkspaceService {

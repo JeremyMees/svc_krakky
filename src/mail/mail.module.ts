@@ -1,7 +1,7 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { UserModule } from 'src/users/users.module';
 import { MailController } from './mail.controller';
-import { MailService } from './mail.service';
+import { MailService } from './services/mail.service';
 
 @Module({
   providers: [MailService],

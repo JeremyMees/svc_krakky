@@ -16,7 +16,7 @@ import {
 } from '../schemas/reset-password-token.schema';
 import { ResetPasswordTokenModel } from '../models/reset-password-token.model';
 import { ResetPasswordModel } from '../models/reset-password.model';
-import { MailService } from 'src/mail/mail.service';
+import { MailService } from 'src/mail/services/mail.service';
 import { MemberModel } from 'src/workspace/models/member.model';
 import { UpdateUserImgDTO } from '../dtos/update-user-img.dto';
 import { AssigneeModel } from 'src/card/models/assignee.model';
