@@ -21,7 +21,7 @@ import { AddTagDTO } from 'src/tag/dtos/add-tag.dto';
 import { TagService } from 'src/tag/services/tag/tag.service';
 import { GetOrDeleteDashboardDTO } from '../../dashboard/dtos/get.dashboard.dto';
 
-@WebSocketGateway(80, {
+@WebSocketGateway({
   namespace: 'dashboard',
   cors: {
     origin: '*',
