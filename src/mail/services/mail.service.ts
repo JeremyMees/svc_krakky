@@ -8,10 +8,15 @@ import { WorkspaceJoinMailDTO } from '../dtos/workspace-join-mail.dto';
 import { UserModel } from 'src/users/models/user.model';
 import { ConfigService } from '@nestjs/config';
 import { ContactMailDTO } from '../dtos/contact-mail.dto';
+import { ADD_IMG, GOODBYE_IMG, WELCOME_IMG } from '../assets/images';
 
 @Injectable()
 export class MailService {
+  dir: string = __dirname.split('/').slice(0, -1).join('/');
   url: string = this.configService.get<string>('BASE_URL');
+  goodbye_img: string = GOODBYE_IMG;
+  welcome_img: string = WELCOME_IMG;
+  add_img: string = ADD_IMG;
 
   constructor(
     private mailer: MailerService,
@@ -27,15 +32,9 @@ export class MailService {
         from: 'noreply@krakky.com',
         subject: 'Welcome to Krakky',
         template: './welcome',
-        attachments: [
-          {
-            filename: 'welcome.svg',
-            path: __dirname + '/assets/welcome.svg',
-            cid: 'welcome',
-          },
-        ],
         context: {
           username: mail.username,
+          img: `data:image/svg+xml;base64,${this.welcome_img}`,
           urlVerify: `${this.url}/users/verify/${mail.id}`,
           urlDelete: `${this.url}/users/delete/${mail.id}`,
         },
@@ -46,7 +45,8 @@ export class MailService {
           message: 'Mail is successfully sent',
         };
       })
-      .catch(() => {
+      .catch((err) => {
+        console.log(err);
         return {
           statusCode: 400,
           message: 'Error while sending email',
@@ -61,14 +61,8 @@ export class MailService {
         from: 'noreply@krakky.com',
         subject: 'Goodbye',
         template: './goodbye',
-        attachments: [
-          {
-            filename: 'goodbye.svg',
-            path: __dirname + '/assets/goodbye.svg',
-            cid: 'goodbye',
-          },
-        ],
         context: {
+          img: `data:image/svg+xml;base64,${this.goodbye_img}`,
           username: mail.username,
         },
       } as ISendMailOptions)
@@ -116,14 +110,8 @@ export class MailService {
         from: 'noreply@krakky.com',
         subject: "You've been added to a workspace",
         template: './added-member',
-        attachments: [
-          {
-            filename: 'add.svg',
-            path: __dirname + '/assets/add.svg',
-            cid: 'add',
-          },
-        ],
         context: {
+          img: `data:image/svg+xml;base64,${this.add_img}`,
           username: user.username,
           urlVerify: `${this.url}/workspace/join/${mail.workspace_id}/${mail.token}`,
         },
@@ -151,14 +139,8 @@ export class MailService {
         from: 'noreply@krakky.com',
         subject: "You've been added to a workspace",
         template: './added-non-member',
-        attachments: [
-          {
-            filename: 'add.svg',
-            path: __dirname + '/assets/add.svg',
-            cid: 'add',
-          },
-        ],
         context: {
+          img: `data:image/svg+xml;base64,${this.add_img}`,
           urlJoin: `${this.url}/home`,
           urlVerify: `${this.url}/workspace/join/${mail.workspace_id}/${mail.token}`,
         },

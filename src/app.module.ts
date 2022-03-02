@@ -28,9 +28,10 @@ import { JwtAuthGuard } from './auth/guards/jwt.guard';
     MailerModule.forRootAsync({
       useFactory: async (config: ConfigService) => ({
         transport: {
-          host: config.get('MAIL_HOST'),
-          port: config.get('MAIL_PORT'),
+          service: 'gmail',
+          host: 'smtp.gmail.com',
           secure: true,
+          ssl: true,
           auth: {
             user: config.get('MAIL_USER'),
             pass: config.get('MAIL_PASSWORD'),
