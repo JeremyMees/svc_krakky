@@ -18,12 +18,12 @@ export class TagService {
   ) {}
 
   async addTag(tag: AddTagDTO): Promise<HttpResponse> {
-    const { card_id, board_id, ...new_tag } = tag;
+    const { board_id, ...new_tag } = tag;
     const update_card: HttpResponse = await this.updateCard(tag);
     await this.updateDashboard(tag);
     if (update_card.statusCode === 200) {
       return {
-        statusCode: 200,
+        statusCode: 201,
         data: new_tag,
         message: 'Tag successfully added',
       };

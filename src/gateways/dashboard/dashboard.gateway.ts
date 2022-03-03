@@ -53,6 +53,10 @@ export class DashboardGateway {
   ): Promise<void> {
     const id: string = data.board_id;
     this.getAggregatedDashboard(data).then((response: HttpResponse) => {
+      if (response.statusCode === 200) {
+        response.data.object = 'dashboard';
+        response.data.action = 'get';
+      }
       this.server.emit(id, response);
     });
   }
@@ -65,32 +69,36 @@ export class DashboardGateway {
     this.dashboardService
       .updateDashboard(data)
       .then(async (response: HttpResponse) => {
-        const dashboard = await this.getAggregatedDashboard({ board_id: id });
-        response.statusCode === 200 ? (response.data = dashboard.data) : null;
+        let received_data = data as any;
+        received_data.object = 'dashboard';
+        received_data.action = 'update';
+        response.statusCode === 200 ? (response.data = received_data) : null;
         this.server.emit(id, response);
       });
   }
 
-  @SubscribeMessage('delete-dashboard')
-  async deleteDashboard(
-    @MessageBody() data: GetOrDeleteDashboardDTO,
-  ): Promise<void> {
-    const id: string = data.board_id;
-    this.dashboardService
-      .deleteDashboard(data.board_id)
-      .then(async (response: HttpResponse) => {
-        const dashboard = await this.getAggregatedDashboard({ board_id: id });
-        response.statusCode === 200 ? (response.data = dashboard.data) : null;
-        this.server.emit(id, response);
-      });
-  }
+  // @SubscribeMessage('delete-dashboard')
+  // async deleteDashboard(
+  //   @MessageBody() data: GetOrDeleteDashboardDTO,
+  // ): Promise<void> {
+  //   const id: string = data.board_id;
+  //   this.dashboardService
+  //     .deleteDashboard(data.board_id)
+  //     .then(async (response: HttpResponse) => {
+  //       const dashboard = await this.getAggregatedDashboard({ board_id: id });
+  //       response.statusCode === 200 ? (response.data = dashboard.data) : null;
+  //       this.server.emit(id, response);
+  //     });
+  // }
 
   @SubscribeMessage('add-list')
   async addList(@MessageBody() data: AddListDTO): Promise<void> {
     const id: string = data.board_id;
     this.listService.addList(data).then(async (response: HttpResponse) => {
-      const dashboard = await this.getAggregatedDashboard({ board_id: id });
-      response.statusCode === 201 ? (response.data = dashboard.data) : null;
+      if (response.statusCode === 201) {
+        response.data.object = 'list';
+        response.data.action = 'add';
+      }
       this.server.emit(id, response);
     });
   }
@@ -99,8 +107,10 @@ export class DashboardGateway {
   async updateList(@MessageBody() data: UpdateListDTO): Promise<void> {
     const id: string = data.board_id;
     this.listService.updateList(data).then(async (response: HttpResponse) => {
-      const dashboard = await this.getAggregatedDashboard({ board_id: id });
-      response.statusCode === 200 ? (response.data = dashboard.data) : null;
+      let received_data = data as any;
+      received_data.object = 'list';
+      received_data.action = 'update';
+      response.statusCode === 200 ? (response.data = received_data) : null;
       this.server.emit(id, response);
     });
   }
@@ -111,8 +121,10 @@ export class DashboardGateway {
     this.listService
       .deleteList(data._id)
       .then(async (response: HttpResponse) => {
-        const dashboard = await this.getAggregatedDashboard({ board_id: id });
-        response.statusCode === 200 ? (response.data = dashboard.data) : null;
+        if (response.statusCode === 200) {
+          response.data.object = 'list';
+          response.data.action = 'delete';
+        }
         this.server.emit(id, response);
       });
   }
@@ -121,8 +133,10 @@ export class DashboardGateway {
   async addCard(@MessageBody() data: AddCardDTO): Promise<void> {
     const id: string = data.board_id;
     this.cardService.addCard(data).then(async (response: HttpResponse) => {
-      const dashboard = await this.getAggregatedDashboard({ board_id: id });
-      response.statusCode === 201 ? (response.data = dashboard.data) : null;
+      if (response.statusCode === 201) {
+        response.data.object = 'card';
+        response.data.action = 'add';
+      }
       this.server.emit(id, response);
     });
   }
@@ -131,8 +145,10 @@ export class DashboardGateway {
   async updateCard(@MessageBody() data: UpdateCardDTO): Promise<void> {
     const id: string = data.board_id;
     this.cardService.updateCard(data).then(async (response: HttpResponse) => {
-      const dashboard = await this.getAggregatedDashboard({ board_id: id });
-      response.statusCode === 200 ? (response.data = dashboard.data) : null;
+      let received_data = data as any;
+      received_data.object = 'card';
+      received_data.action = 'update';
+      response.statusCode === 200 ? (response.data = received_data) : null;
       this.server.emit(id, response);
     });
   }
@@ -141,8 +157,10 @@ export class DashboardGateway {
   async deleteCard(@MessageBody() data: DeleteCardDTO): Promise<void> {
     const id: string = data.board_id;
     this.cardService.deleteCard(data).then(async (response: HttpResponse) => {
-      const dashboard = await this.getAggregatedDashboard({ board_id: id });
-      response.statusCode === 200 ? (response.data = dashboard.data) : null;
+      if (response.statusCode === 200) {
+        response.data.object = 'card';
+        response.data.action = 'delete';
+      }
       this.server.emit(id, response);
     });
   }
@@ -151,8 +169,10 @@ export class DashboardGateway {
   async addTag(@MessageBody() data: AddTagDTO): Promise<void> {
     const id: string = data.board_id;
     this.tagService.addTag(data).then(async (response: HttpResponse) => {
-      const dashboard = await this.getAggregatedDashboard({ board_id: id });
-      response.statusCode === 200 ? (response.data = dashboard.data) : null;
+      if (response.statusCode === 201) {
+        response.data.object = 'tag';
+        response.data.action = 'add';
+      }
       this.server.emit(id, response);
     });
   }
@@ -161,8 +181,10 @@ export class DashboardGateway {
   async deleteTag(@MessageBody() data: DeleteCardDTO): Promise<void> {
     const id: string = data.board_id;
     this.cardService.deleteCard(data).then(async (response: HttpResponse) => {
-      const dashboard = await this.getAggregatedDashboard({ board_id: id });
-      response.statusCode === 200 ? (response.data = dashboard.data) : null;
+      if (response.statusCode === 201) {
+        response.data.object = 'tag';
+        response.data.action = 'delete';
+      }
       this.server.emit(id, response);
     });
   }

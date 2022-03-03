@@ -164,7 +164,14 @@ export class CardService {
       return await this.card
         .deleteOne(params)
         .then(() => {
-          return { statusCode: 200, message: 'Deleted card successfully' };
+          const card_id: boolean = '_id' in queryparams;
+          return card_id
+            ? { statusCode: 200, message: 'Deleted card successfully' }
+            : {
+                statusCode: 200,
+                data: { _id: queryparams._id },
+                message: 'Deleted card successfully',
+              };
         })
         .catch(() => {
           return {
@@ -186,6 +193,9 @@ export class CardService {
       .then(() => {
         return {
           statusCode: 200,
+          data: {
+            _id: id.list_id,
+          },
           message: 'Deleted list and coherent cards successfully',
         };
       })
