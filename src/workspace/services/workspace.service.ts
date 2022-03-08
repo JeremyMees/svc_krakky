@@ -385,17 +385,21 @@ export class WorkspaceService {
   }
 
   async deleteTeamMember(queryparams: QueryparamsWorkspaceModel) {
-    return this.getWorkspaces({ id: queryparams.workspace_id })
+    return this.getWorkspaces({ workspace_id: queryparams.workspace_id })
       .then((workspace: HttpResponse) => {
         if (workspace.statusCode === 200) {
           const index = workspace.data[0].team.findIndex(
-            (obj) => obj._id === queryparams.user_id,
+            (obj: { role: string; _id: string }) =>
+              obj._id === queryparams.user_id,
           );
           if (index > -1) {
             workspace.data[0].team.splice(index, 1);
             if (workspace.data[0].team.length > 0) {
               return this.workspace
-                .updateOne({ _id: queryparams.workspace_id }, workspace.data[0])
+                .updateOne(
+                  { workspace_id: queryparams.workspace_id },
+                  workspace.data[0],
+                )
                 .then(() => {
                   return {
                     statusCode: 200,

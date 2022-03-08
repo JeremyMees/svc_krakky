@@ -11,10 +11,10 @@ export class WorkspaceToken {
   @Prop({ required: true })
   expire: string;
 
-  @Prop({ required: true, unique: true })
+  @Prop({ required: true })
   email: string;
 
-  @Prop({ required: false, unique: true, sparse: true })
+  @Prop({ required: false, sparse: true })
   user_id: string;
 
   @Prop({ required: true })
