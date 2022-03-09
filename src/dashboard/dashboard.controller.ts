@@ -87,15 +87,15 @@ export class DashboardController {
     return await this.dashboardService.updateTeamMember(members);
   }
 
+  @Delete('member/:board_id/:user_id')
+  async deleteTeamMember(@Param() params: QueryparamsDashboardModel) {
+    return await this.dashboardService.deleteTeamMember(params);
+  }
+
   @Delete('/:board_id')
   async deleteList(
     @Param() param: QueryparamsDashboardModel,
   ): Promise<HttpResponse> {
     return await this.dashboardService.deleteDashboard(param.board_id);
-  }
-
-  @Delete('member/:board_id/:user_id')
-  async deleteTeamMember(@Param() params: QueryparamsDashboardModel) {
-    return await this.dashboardService.deleteTeamMember(params);
   }
 }
