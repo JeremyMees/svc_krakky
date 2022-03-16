@@ -8,7 +8,13 @@ import { WorkspaceJoinMailDTO } from '../dtos/workspace-join-mail.dto';
 import { UserModel } from 'src/users/models/user.model';
 import { ConfigService } from '@nestjs/config';
 import { ContactMailDTO } from '../dtos/contact-mail.dto';
-import { ADD_IMG, GOODBYE_IMG, WELCOME_IMG } from '../assets/images';
+import {
+  ADD_IMG,
+  GOODBYE_IMG,
+  WELCOME_IMG,
+  FORGOT_IMG,
+} from '../assets/images';
+import { ForgotMailDTO } from '../dtos/forgot-mail.dto';
 
 @Injectable()
 export class MailService {
@@ -17,6 +23,7 @@ export class MailService {
   goodbye_img: string = GOODBYE_IMG;
   welcome_img: string = WELCOME_IMG;
   add_img: string = ADD_IMG;
+  forgot_img: string = FORGOT_IMG;
 
   constructor(
     private mailer: MailerService,
@@ -45,8 +52,7 @@ export class MailService {
           message: 'Mail is successfully sent',
         };
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
         return {
           statusCode: 400,
           message: 'Error while sending email',
@@ -170,6 +176,33 @@ export class MailService {
           text: mail.text,
           username: mail.username,
           email: mail.email,
+        },
+      } as ISendMailOptions)
+      .then(() => {
+        return {
+          statusCode: 200,
+          message: 'Mail is successfully sent',
+        };
+      })
+      .catch(() => {
+        return {
+          statusCode: 400,
+          message: 'Error while sending email',
+        };
+      });
+  }
+
+  async sendForgotMail(mail: ForgotMailDTO): Promise<HttpResponse> {
+    mail.token = mail.token.split('/').join('_');
+    return this.mailer
+      .sendMail({
+        to: mail.email,
+        from: 'noreply@krakky.com',
+        subject: 'Krakky reset password',
+        template: './password-reset',
+        context: {
+          img: `data:image/svg+xml;base64,${this.forgot_img}`,
+          urlReset: `${this.url}/users/reset-password/${mail.token}`,
         },
       } as ISendMailOptions)
       .then(() => {

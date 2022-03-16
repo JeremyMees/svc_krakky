@@ -1,6 +1,10 @@
 <head>
   <style>
-    a{ color: #0d89ec } a:hover{ color: #57a4e4}
+    button{ color: #fff; background: #2196f3; border: 1px solid #2196f3;
+    padding: .5rem 1rem; font-size: 0.75rem; transition: background-color
+    .2s,color .2s,border-color .2s,box-shadow .2s; border-radius: 3px;margin: 0
+    auto; display:block; cursor: pointer;; text-align: center; box-shadow: 0 3px
+    1px -2px #0003,0 2px 2px 0 #00000024,0 1px 5px 0 #0000001f;}
   </style>
 </head>
 <div
@@ -25,13 +29,16 @@
     and not only yours but for everyone in your company.
     <br />
     The only thing you have to do now is confirming your email address by
-    clicking
-    <a href='{{urlVerify}}'>here</a>
+    clicking the verify account button.
     <br />
     <br />
-    Click
-    <a href='{{urlDelete}}'>here</a>
-    if you didn't join Krakky.
+    <a href='{{urlVerify}}'><button>Verify account</button></a>
+    <br />
+    <br />
+    If you didn't join Krakky click remove account button.
+    <br />
+    <br />
+    <a href='{{urlDelete}}'><button>Remove account</button></a>
     <br />
     <br />
     Excited to have you aboard! Thanks!

@@ -390,6 +390,10 @@ export class UserService {
           return newReset
             .save()
             .then((resetObj: ResetPasswordTokenModel) => {
+              this.mailService.sendForgotMail({
+                token: resetObj.token,
+                email: obj.email,
+              });
               return {
                 statusCode: 201,
                 message: `Created reset password successfully`,
@@ -419,8 +423,9 @@ export class UserService {
   }
 
   async resetPassword(resetObj: ResetPasswordModel): Promise<HttpResponse> {
+    const user: HttpResponse = await this.getUser({ email: resetObj.email });
     return this.reset_password
-      .findOne({ user_id: resetObj.user_id })
+      .findOne({ user_id: user.data._id })
       .exec()
       .then(async (response: ResetPasswordTokenModel) => {
         if (response) {
@@ -435,11 +440,11 @@ export class UserService {
               this.salt,
             );
             return this.users
-              .updateOne({ _id: resetObj.user_id }, { password: hash })
+              .updateOne({ _id: user.data._id }, { password: hash })
               .exec()
               .then(async () => {
                 return this.reset_password
-                  .deleteOne({ user_id: resetObj.user_id })
+                  .deleteOne({ user_id: user.data._id })
                   .exec()
                   .then(() => {
                     return {
@@ -482,7 +487,7 @@ export class UserService {
   }
 
   async getMembers(body: Array<MemberModel>): Promise<HttpResponse> {
-    let teamMembers: Array<AssigneeModel> = [];
+    const teamMembers: Array<AssigneeModel> = [];
     await this.asyncForEach(body, async (member: MemberModel) => {
       await this.getUser({ id: member._id }).then((res: HttpResponse) => {
         if (res.statusCode === 200) {
